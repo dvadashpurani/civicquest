@@ -81,6 +81,7 @@ describe("buildContentSecurityPolicy (Req 6.1, 6.2)", () => {
   it("adds 'unsafe-eval' and drops the https upgrade only in development", () => {
     const dev = parseCsp(buildContentSecurityPolicy({ supabaseUrl: SUPABASE, isDev: true }));
     expect(dev.get("script-src")).toContain("'unsafe-eval'");
+    expect(dev.get("connect-src")).toContain("ws:");
     expect(dev.has("upgrade-insecure-requests")).toBe(false);
   });
 

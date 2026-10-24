@@ -196,3 +196,76 @@ export function Icon({ name, alt, size = 48, locked = false, className, style, .
     />
   );
 }
+
+/**
+ * The day icon for each mission in docs/missions.md, keyed by title. A title
+ * that is not listed falls back to the icon of the building it adds to the town.
+ */
+const MISSION_ICONS: Readonly<Record<string, IconName>> = {
+  "Stop, look, listen": "person-walking",
+  "Know your signals": "vertical-traffic-light",
+  "Be seen": "safety-vest",
+  "Bus safety": "bus",
+  "My safe route": "round-pushpin",
+  "Thank a helper": "handshake",
+  "Kind words, hurtful words": "star",
+  "Include someone": "playground-slide",
+  "Say sorry and mean it": "people-hugging",
+  "Ask for help": "handshake",
+  "Sort it right": "recycling-symbol",
+  "Litter detectives": "national-park",
+  "Save water": "whale",
+  "Lights off": "light-bulb",
+  "Plant something": "seedling",
+  "Spot the problem": "round-pushpin",
+  "Who fixes what": "fire-engine",
+  "Report it right": "classical-building",
+  "Help a neighbor": "handshake",
+  "Follow up": "star",
+  "Public spaces are shared": "national-park",
+  "Thank a community worker": "fire-engine",
+  "Rules have reasons": "shield",
+  "Disagree respectfully": "people-hugging",
+  "Respect online": "owl",
+  "Waste audit": "recycling-symbol",
+  "Clean one spot": "deciduous-tree",
+  "Fix the recycling sign": "recycling-symbol",
+  "Energy detectives": "light-bulb",
+  "Green pledge": "seedling",
+  "Pick a problem": "round-pushpin",
+  "Research it": "owl",
+  "Make a plan and find who decides": "classical-building",
+  "Take action": "star",
+  "Share the results": "school",
+  "Find your cause": "round-pushpin",
+  "Volunteer shift": "canned-food",
+  "Reflect on service": "owl",
+  "Organize a drive": "canned-food",
+  "Second shift": "handshake",
+  "Who runs your city": "classical-building",
+  "How a decision gets made": "light-bulb",
+  "Watch a public meeting": "classical-building",
+  "Write to an official": "school",
+  "Read local news": "world-map",
+  "Plan a lesson for younger kids": "school",
+  "Teach the lesson": "star",
+  "Plan a cleanup": "world-map",
+  "Run the cleanup": "national-park",
+};
+
+/** The icon for a mission's day card: its own icon, else its town building's. */
+export function missionIcon(title: string, townItem: string): IconName {
+  const own = MISSION_ICONS[title];
+  if (own) return own;
+  return isTownItem(townItem) ? TOWN_ITEMS[townItem].icon : "star";
+}
+
+/** The town building each stamp quality typically adds, for the legend. */
+export const QUALITY_BUILDINGS: readonly { quality: BadgeQuality; townItem: TownItem }[] = [
+  { quality: "Safety", townItem: "crosswalk" },
+  { quality: "Kindness", townItem: "bench" },
+  { quality: "Responsibility", townItem: "recycling" },
+  { quality: "Respect", townItem: "library" },
+  { quality: "Helping", townItem: "clinic" },
+  { quality: "Civic action", townItem: "school" },
+];

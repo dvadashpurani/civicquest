@@ -41,6 +41,15 @@ export type PlanClass = {
   readonly moduleTitle: string;
   /** The current mission day (1-based) the class is on at seed time. */
   readonly startDay: number;
+  /**
+   * Other SAME-LEVEL module titles used to hold this class's seeded history.
+   * Every mission in each of these is fully confirmed (all days, whole roster),
+   * which fills the class town and gives every student stamps WITHOUT ever
+   * completing the current module. The next-mission lookup scans assigned
+   * modules by week_order and lands on the current module's first unconfirmed
+   * day, so these never become "next". Must not include `moduleTitle`.
+   */
+  readonly historyModuleTitles: readonly string[];
 };
 
 /**
@@ -59,6 +68,7 @@ export const PLAN_CLASSES: readonly PlanClass[] = [
     studentCount: 24,
     moduleTitle: "Safe Streets",
     startDay: 1,
+    historyModuleTitles: ["Kind Words", "Clean Planet"],
   },
   {
     key: "grade4",
@@ -69,6 +79,7 @@ export const PLAN_CLASSES: readonly PlanClass[] = [
     studentCount: 23,
     moduleTitle: "Safe Streets",
     startDay: 1,
+    historyModuleTitles: ["Kind Words"],
   },
   {
     key: "grade7",
@@ -79,6 +90,7 @@ export const PLAN_CLASSES: readonly PlanClass[] = [
     studentCount: 22,
     moduleTitle: "Respect Everywhere",
     startDay: 2,
+    historyModuleTitles: ["Neighborhood Helpers", "Green Team"],
   },
   {
     key: "grade10",
@@ -89,6 +101,7 @@ export const PLAN_CLASSES: readonly PlanClass[] = [
     studentCount: 21,
     moduleTitle: "Civics Project",
     startDay: 1,
+    historyModuleTitles: ["Serve Your Community", "Know Your City"],
   },
   {
     key: "grade11",
@@ -99,6 +112,7 @@ export const PLAN_CLASSES: readonly PlanClass[] = [
     studentCount: 20,
     moduleTitle: "Civics Project",
     startDay: 3,
+    historyModuleTitles: ["Serve Your Community", "Lead the Way"],
   },
 ];
 

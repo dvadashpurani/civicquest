@@ -121,3 +121,43 @@ Each case lists what it checks, how to run it, and the expected result. Later bu
   1. `npm run test` (`lib/auth/login-rate-limit.test.ts`).
   2. With `npm run dev` and a real `SUPABASE_SERVICE_ROLE_KEY` in `.env.local`, submit a wrong password for one email six times within a minute on `/login`. Then run `select key from public.rate_limits where key like 'login:%';`.
 - **Expected:** the unit test passes. The sixth attempt is refused before Supabase Auth is called, with `Too many sign-in attempts. Wait a minute, then try again.` The message never names a field. If the limiter itself is unavailable (for example a placeholder service role key), every attempt fails closed with `Sign-in failed. Wait a minute, then try again.` Keys look like `login:email:<64 hex>` and `login:ip:<64 hex>`, with no plain email or IP.
+
+## Step 4: Core loop
+
+These cover the confirm / edit / undo RPCs (`0006_confirm.sql`, `0007_edit.sql`, `0008_undo.sql`) and the protections behind them (the direct-write guard and the `mission_completions` protection trigger in `0004_triggers.sql`). Most of the server-side behavior is proven automatically by `supabase/tests/04_core_loop.sql`; the plain-text rendering cases are a short manual UI check backed by React escaping.
+
+| ID | Checks | Run | Requirements |
+|----|--------|-----|--------------|
+| S4-01 | Cross-teacher RPC calls rejected (confirm / edit / undo) | `04_core_loop.sql` | 20.7, 32.2 |
+| S4-02 | Direct table writes to `mission_completions` rejected | `04_core_loop.sql` + `01_foundation.sql` | 32.2 |
+| S4-03 | `' OR 1=1 --` and `<script>alert(1)</script>` shown as plain text in rosters and mission records | `04_core_loop.sql` + `npm run test` + browser | 33.4, 34.4 |
+| S4-04 | Re-confirm after undo works | `04_core_loop.sql` | 20.7 (15.2, 20.8) |
+
+### S4-01 Cross-teacher RPC calls rejected
+
+- **Checks:** a teacher cannot confirm, edit, or undo another teacher's class. The confirm / edit / undo RPCs are `security invoker`, so RLS plus the ownership check reject any caller who is not the class's own teacher (or a school admin, who is allowed). A non-owner teacher, and a wrong-role caller such as a partner, are both rejected.
+- **Run:** `supabase/tests/04_core_loop.sql` (the `[non-owner]` and `[wrong-role]` cases). Each impersonates a signed-in user with `set local role authenticated` plus `set local request.jwt.claims = '{"sub":"<uuid>","role":"authenticated"}'` and calls the RPC with `perform public.confirm_class_mission(...)`.
+- **Expected:** the non-owner teacher's and the partner's calls raise `not permitted`, and the rejection rolls back fully — **zero** stray `mission_completions` rows and **zero** stray `audit_log` rows remain for that mission. A positive control in the same suite confirms the owning teacher (and the school admin) succeed, so a rejection cannot pass just because nothing works. Suite passes.
+
+### S4-02 Direct table writes to `mission_completions` rejected
+
+- **Checks:** only the via_rpc RPCs may write `mission_completions`. A signed-in teacher or Leader cannot `insert` or `update` the table directly through the REST API — the direct-write guard and the `mission_completions` protection trigger (`0004_triggers.sql`) block it. The guard is statement-level, so it raises even when RLS hides every target row, and it applies to `postgres` too; only `service_role` and the `civicquest.via_rpc` flag (set only inside the five core RPCs' preamble) are exempt.
+- **Run:**
+  1. `supabase/tests/01_foundation.sql` (case **S1-04**, the direct insert/update statements against `mission_completions`).
+  2. `supabase/tests/04_core_loop.sql` — the trailing `pg_proc` scan asserts that in the PostgREST-exposed schemas, `set_config` appears only inside the core RPC names and only with the constant `'civicquest.via_rpc'`, so the client has no path to set the flag itself.
+- **Expected:** each direct `insert` / `update` raises `writes to this table must go through CivicQuest actions` (SQLSTATE 42501) and no row changes. The `pg_proc` scan returns **zero** rows (no function sets the flag outside the sanctioned RPCs). Both suites pass. See also S1-04.
+
+### S4-03 Injection strings render as plain text
+
+- **Checks:** text containing `' OR 1=1 --` or `<script>alert(1)</script>` is stored and shown as inert plain text in class rosters and saved mission records — no SQL runs and no HTML/script executes. The RPCs and the query builder use named parameters, never concatenated SQL, and every value renders through React (no `dangerouslySetInnerHTML`).
+- **Run:**
+  1. `npm run test` (`lib/validation/login.test.ts` confirms the injection string survives validation unchanged as inert text; the `dangerouslySetInnerHTML` guard in `scripts/guard-client.mjs` keeps raw HTML rendering out of the app).
+  2. `supabase/tests/04_core_loop.sql` exercises the RPCs with parameterized calls (`perform public.confirm_class_mission(...)`), confirming no SQL injection path exists through the core loop.
+  3. Manual UI check: create or rename a student whose name is `' OR 1=1 --` and another whose name is `<script>alert(1)</script>`, confirm a mission for them, then view the roster and the saved mission record on `/teacher/class/[id]`.
+- **Expected:** the unit test passes. In the browser, both strings appear **verbatim as text** in the roster and in the saved mission record. No row is unexpectedly matched or altered (no SQL execution), no alert dialog appears, and viewing page source shows the string HTML-escaped (`&lt;script&gt;...`), i.e. React escaped it rather than injecting markup.
+
+### S4-04 Re-confirm after undo works
+
+- **Checks:** a mission can be undone and then confirmed again. After `confirm -> undo -> confirm`, the completions end `approved` again with fresh server-set points and a strictly later `confirmed_at`, and a plain re-confirm of an already-approved mission is idempotent (no duplicate rows, points, or `audit_log` entries).
+- **Run:** `supabase/tests/04_core_loop.sql` (the `[cycle]` and `[reconfirm]` cases). The suite uses a pre-aged `reversed` row written as `service_role` to prove the re-confirm stamps a strictly later `confirmed_at` across transactions, plus a live `confirm -> undo -> confirm` cycle on a fresh roster.
+- **Expected:** after the full cycle the rows are `approved` at 10 points with a `confirmed_at` later than the prior stamp; a second identical confirm changes nothing (same `confirmed_at`, same points, exactly one `confirm` audit entry). Suite passes.

@@ -220,90 +220,90 @@ Build CivicQuest in TypeScript (Next.js App Router, strict mode) on Supabase, in
     - `lib/seed/history.ts` (pure plan) wired into `lib/seed/run.ts`: approved completions over the 14 days before the seed date using `computePoints`, so the Grade 3 town is 45–55% full, every student has ≥ 1 stamp, and `audit_log` has confirmation entries dated before today; class positions match Safe Streets day 1 / Respect Everywhere day 2 / Civics Project day 3
     - _Requirements: 17.5_
 
-  - [ ]* 5.6 Write unit tests for the history plan
+  - [x]* 5.6 Write unit tests for the history plan
     - Grade 3 fill between 45% and 55% of 36; every student has a stamp; at least one confirmation before the seed date
     - _Requirements: 17.5_
 
-- [~] 6. Step 3 checkpoint
+- [x] 6. Step 3 checkpoint
   - Run lint, typecheck, and tests, and fix any failures; run `npm run seed` against the dev project.
   - Ask the user to test the step and commit.
   - Add two or three sentences to the "Build log" section of `docs/KIRO_WRITEUP.md` describing what was built and which Kiro features helped (specs, steering, hooks, MCP, property-based tests).
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 7. Step 4 — Core loop
-  - [~] 7.1 Write the `confirm_class_mission` RPC
+- [x] 7. Step 4 — Core loop
+  - [x] 7.1 Write the `confirm_class_mission` RPC
     - `supabase/migrations/0006_confirm.sql`, `security invoker`: preamble `set_config('civicquest.via_rpc','on',true)`, `auth.uid()` required, in-body checks (teacher owns class, mission in the class's module, every id is a student of the class); de-duplicate ids; upsert (insert approved; re-approve `reversed` with fresh server values and a `re_approve` audit entry; leave `approved` untouched); one `confirm` audit entry; points from mission level, all actor/time fields server-set
     - Apply via Supabase MCP
     - _Requirements: 20.1, 20.2, 20.6, 20.7, 20.8, 32.2, 32.4, 36.3, 36.4_
 
-  - [~] 7.2 Write the `edit_mission_participants` RPC
+  - [x] 7.2 Write the `edit_mission_participants` RPC
     - `supabase/migrations/0007_edit.sql`: same preamble and checks plus confirmation time < 24h; upsert students in B; reverse previously approved students not in B with reason `removed by edit`; audit entry per change; all in one transaction
     - Apply via Supabase MCP
     - _Requirements: 21.2, 21.3, 21.4, 21.5, 36.4_
 
-  - [~] 7.3 Write the `undo_mission` RPC
+  - [x] 7.3 Write the `undo_mission` RPC
     - `supabase/migrations/0008_undo.sql`: teacher caller needs < 24h and one of `pressed by mistake`, `the activity didn't happen`, `wrong class`; admin caller of the class's school, any age, reason 1–500 chars; reverse all approved completions for the mission and class; one audit entry with the reason
     - Apply via Supabase MCP
     - _Requirements: 4.5, 4.7, 4.8, 21.6, 21.7, 21.8, 21.9, 36.4_
 
-  - [~] 7.4 Write the Step 4 SQL test script
+  - [x] 7.4 Write the Step 4 SQL test script
     - `supabase/tests/04_core_loop.sql`: owner succeeds; non-owner teacher, wrong role, and late teacher undo are rejected with full rollback (no stray `audit_log` row); confirm → undo → confirm leaves rows approved with a later `confirmed_at` and fresh points; re-confirm changes nothing; edit removes then re-adds a student; invalid undo reason rejected; `pg_proc` scan finds `set_config` in exposed schemas only in the five RPC names with the constant `'civicquest.via_rpc'`
     - Run via Supabase MCP
     - _Requirements: 4.6, 15.2, 20.7, 20.8, 21.5, 21.7, 32.2, 32.3_
 
-  - [~] 7.5 Add validation schemas and teacher data loaders
+  - [x] 7.5 Add validation schemas and teacher data loaders
     - `lib/validation/mission.ts`: strict zod schemas (unknown fields rejected, UUIDs validated, undo reason enum, admin reason 1–500)
     - `lib/server/teacher.ts`: owned classes, `class_next_mission` (lowest unconfirmed `day_number`), `class_recent_confirmation` (min `confirmed_at` of approved rows < 24h), roster, today's proof log; all via the server client under RLS with explicit column lists
     - _Requirements: 18.2, 18.5, 21.1, 21.10, 33.1, 33.3_
 
-  - [~] 7.6 Add teacher server actions
+  - [x] 7.6 Add teacher server actions
     - `app/(teacher)/teacher/actions.ts` (`'use server'`): `confirmMission`, `editParticipants`, `undoMission`; zod parse, `requireRole('teacher')`, ownership check, `.rpc()` with named params, friendly error messages (no SQL/stack), no secrets or student names in logs
     - _Requirements: 20.1, 20.2, 20.6, 21.2, 21.7, 32.1, 32.2, 32.3, 33.2, 34.1, 36.1, 36.2_
 
-  - [~] 7.7 Build the class town components
+  - [x] 7.7 Build the class town components
     - `components/town/TownGrid.tsx`, `TownStageProgress.tsx`, `RewardsList.tsx`: rows from `class_town` passed through `placeTown`/`townStage`; Icon per town item; empty town for zero missions; village/town/city rewards with stages
     - _Requirements: 22.2, 22.3, 22.5_
 
-  - [~] 7.8 Implement the leaderboard
+  - [x] 7.8 Implement the leaderboard
     - `lib/domain/leaderboard.ts`: points per student from `class_points` (zero students → 0), descending, ties share rank and sort by class name; `components/Leaderboard.tsx` scoped to the school, no individual student rankings for Learners
     - _Requirements: 23.1, 23.2, 23.3, 23.4, 23.5_
 
-  - [ ]* 7.9 Write unit tests for the leaderboard
+  - [x]* 7.9 Write unit tests for the leaderboard
     - Ties, zero-student class, ordering
     - _Requirements: 23.1, 23.2, 23.3_
 
-  - [~] 7.10 Build the Today view and proof log panel
+  - [x] 7.10 Build the Today view and proof log panel
     - `app/(teacher)/teacher/page.tsx`: per owned class, a mini town preview and one of three layouts — Done-today card (no Start, with Edit/Undo) when confirmed < 24h plus the next mission below with its own Start; next mission only otherwise; module-complete state
     - Next mission shows module, day, quality, minutes, proof type, large "Start mission"; empty state for no classes; "Today's proof log" newest first with timestamps
     - _Requirements: 18.1, 18.2, 18.3, 18.4, 18.5, 21.1, 21.9, 21.10_
 
-  - [~] 7.11 Build the three-step mission run screen
+  - [x] 7.11 Build the three-step mission run screen
     - `app/(teacher)/teacher/class/[id]/run/[missionId]/page.tsx` in sticker skin, projector-sized, one step at a time: Story (story, discussion question, Pip for Learners, "Show today's mission"), Mission (title, quality, instructions, "We finished the activity"), Who took part (roster all checked, "Select everyone", "Clear all", error and blocked confirm if the roster fails)
     - All text through React, no `dangerouslySetInnerHTML`
     - _Requirements: 19.1, 19.2, 19.3, 19.4, 19.5, 19.7, 34.4_
 
-  - [~] 7.12 Draw the Pip Safe Streets day 1 comic
+  - [x] 7.12 Draw the Pip Safe Streets day 1 comic
     - `components/pip/SafeStreetsDay1.tsx`: inline SVG, original fox character, three panels (stop / look / listen), accessible title and description
     - _Requirements: 19.6, 37.5_
 
-  - [~] 7.13 Add Confirm for class, celebration, and saved record
+  - [x] 7.13 Add Confirm for class, celebration, and saved record
     - Confirm sends the ids checked at tap time to `confirmMission`; Motion balloon celebration with one balloon per checked student, max 28, then the building drops into the town; static message under `prefers-reduced-motion`
     - Saved mission record shows who confirmed and who was absent; failure shows an error and leaves state unchanged
     - _Requirements: 20.1, 20.3, 20.4, 20.5, 20.6_
 
-  - [~] 7.14 Add Edit who took part and Undo UI
+  - [x] 7.14 Add Edit who took part and Undo UI
     - Edit reopens the roster with the saved selection and calls `editParticipants`; Undo dialog with exactly the three reasons as a radio group, calling `undoMission`; controls only while < 24h
     - _Requirements: 21.1, 21.3, 21.6, 21.7, 21.8, 21.9_
 
-  - [~] 7.15 Build the class view
+  - [x] 7.15 Build the class view
     - `app/(teacher)/teacher/class/[id]/page.tsx`: roster, class town with stage progress and rewards, rank from the leaderboard, module progress, 10 most recent mission records newest first; non-owners get no data
     - _Requirements: 22.1, 22.2, 22.3, 22.5, 18.5_
 
-  - [~] 7.16 Build the full-screen projector town
+  - [x] 7.16 Build the full-screen projector town
     - `app/(teacher)/teacher/class/[id]/town/page.tsx`: sticker skin, viewport-filling, town, current stage, next reward
     - _Requirements: 22.4_
 
-  - [~] 7.17 Update `SECURITY_TESTS.md` for the core loop
+  - [x] 7.17 Update `SECURITY_TESTS.md` for the core loop
     - Cross-teacher RPC calls rejected, direct table writes rejected, `' OR 1=1 --` and `<script>alert(1)</script>` shown as plain text in rosters and records, re-confirm after undo
     - _Requirements: 20.7, 32.2, 33.4, 34.4_
 

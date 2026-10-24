@@ -82,8 +82,9 @@ export function buildContentSecurityPolicy({
     // 'self' is required for the app's own RSC navigation fetches, server
     // actions, and (in dev) the HMR websocket. The only other host is the
     // Supabase https origin. No wss:// for Supabase Realtime: the app polls
-    // and opens no Realtime channels, so the socket stays blocked.
-    "connect-src": ["'self'", ...supabaseSources],
+    // and opens no Realtime channels, so the socket stays blocked. Dev only:
+    // `ws:` lets the HMR socket connect when the app is opened by LAN IP.
+    "connect-src": ["'self'", ...supabaseSources, ...(isDev ? ["ws:"] : [])],
     // The QR scanner plays its scan beep from a data: audio URL.
     "media-src": ["'self'", "data:"],
     "object-src": ["'none'"],

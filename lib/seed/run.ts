@@ -20,6 +20,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { parseMissions, type SeedModule } from "./missions";
+import type { Level } from "../domain/types";
 import {
   DEMO_LEADER,
   PLAN_CLASSES,
@@ -66,6 +67,10 @@ export type SeededClass = {
 export type SeededModule = {
   readonly id: string;
   readonly title: string;
+  /** The level band this module belongs to (learners/helpers/leaders). */
+  readonly level: Level;
+  /** 1-based order within the level; the history step picks same-level modules. */
+  readonly weekOrder: number;
   /** Mission row ids keyed by `day_number` (1–5). */
   readonly missionIdByDay: ReadonlyMap<number, string>;
 };
@@ -190,7 +195,13 @@ async function seedModules(
       missionIdByDay.set(mission.day_number, mission.id);
     }
 
-    byTitle.set(mod.title, { id: moduleRow.id, title: mod.title, missionIdByDay });
+    byTitle.set(mod.title, {
+      id: moduleRow.id,
+      title: mod.title,
+      level: mod.level,
+      weekOrder: mod.weekOrder,
+      missionIdByDay,
+    });
   }
 
   return byTitle;
@@ -285,14 +296,37 @@ async function seedClasses(
       grade: number;
     }>(supabase, "students", studentRows, `creating students for class "${plan.name}"`);
 
+    // Assign the current module PLUS each history module, so the class town and
+    // stamps can be seeded from the history modules without ever completing the
+    // current one. The next-mission lookup scans assigned modules by week_order
+    // and lands on the current module's first unconfirmed day.
+    const historyModules = plan.historyModuleTitles.map((title) => {
+      const hm = modulesByTitle.get(title);
+      if (hm === undefined) {
+        throw new Error(
+          `Seed failed: class "${plan.name}" references unknown history module "${title}"`,
+        );
+      }
+      if (hm.level !== plan.level) {
+        throw new Error(
+          `Seed failed: history module "${title}" (level ${hm.level}) is not the same level as class "${plan.name}" (${plan.level})`,
+        );
+      }
+      if (hm.id === mod.id) {
+        throw new Error(
+          `Seed failed: history module "${title}" is the current module for class "${plan.name}"`,
+        );
+      }
+      return hm;
+    });
+
+    const assignmentRows = [mod, ...historyModules].map((m) => ({
+      class_id: classRow.id,
+      module_id: m.id,
+    }));
     assertOk(
-      (
-        await supabase.from("class_modules").insert({
-          class_id: classRow.id,
-          module_id: mod.id,
-        })
-      ).error,
-      `assigning module "${plan.moduleTitle}" to class "${plan.name}"`,
+      (await supabase.from("class_modules").insert(assignmentRows)).error,
+      `assigning modules to class "${plan.name}"`,
     );
 
     seeded.push({

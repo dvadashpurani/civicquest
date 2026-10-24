@@ -620,6 +620,11 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869462007
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792872994273
       }
     ],
     "7.1 Write the `confirm_class_mission` RPC": [
@@ -627,6 +632,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869462134
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873045904
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873310928
       }
     ],
     "7.2 Write the `edit_mission_participants` RPC": [
@@ -634,6 +649,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869462218
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873316637
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873972848
       }
     ],
     "7.3 Write the `undo_mission` RPC": [
@@ -641,6 +666,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869462280
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873987068
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792874481098
       }
     ],
     "7.4 Write the Step 4 SQL test script": [
@@ -648,6 +683,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869462342
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792874484731
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792875557080
       }
     ],
     "7.5 Add validation schemas and teacher data loaders": [
@@ -655,6 +700,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869462410
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873046780
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873309568
       }
     ],
     "7.6 Add teacher server actions": [
@@ -662,6 +717,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869462466
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792874485553
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792875557798
       }
     ],
     "7.7 Build the class town components": [
@@ -669,6 +734,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869462529
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873047745
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873311835
       }
     ],
     "7.8 Implement the leaderboard": [
@@ -676,6 +751,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869462592
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873048758
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873308556
       }
     ],
     "7.10 Build the Today view and proof log panel": [
@@ -683,6 +768,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869462654
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792875561918
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792876013572
       }
     ],
     "7.11 Build the three-step mission run screen": [
@@ -690,6 +785,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869462714
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873317524
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873974337
       }
     ],
     "7.12 Draw the Pip Safe Streets day 1 comic": [
@@ -697,6 +802,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869462778
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873049589
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873312406
       }
     ],
     "7.13 Add Confirm for class, celebration, and saved record": [
@@ -704,6 +819,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869462838
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792875562836
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792876013056
       }
     ],
     "7.14 Add Edit who took part and Undo UI": [
@@ -711,6 +836,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869462896
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792876017687
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792876992505
       }
     ],
     "7.15 Build the class view": [
@@ -718,6 +853,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869462954
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792876018494
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792876991628
       }
     ],
     "7.16 Build the full-screen projector town": [
@@ -725,6 +870,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869463014
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873318347
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873974930
       }
     ],
     "7.17 Update `SECURITY_TESTS.md` for the core loop": [
@@ -732,6 +887,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869463186
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792876995996
+      },
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792877082247
       }
     ],
     "8. Step 4 checkpoint": [
@@ -907,6 +1072,27 @@
         "executionId": "d7ab353f-4d35-46e7-bec1-913ab32d3e10",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792871740690
+      }
+    ],
+    "5.6 Write unit tests for the history plan": [
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873039108
+      }
+    ],
+    "7.9 Write unit tests for the leaderboard": [
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792873983958
+      }
+    ],
+    "7. Step 4 — Core loop": [
+      {
+        "executionId": "b6358bde-c2be-4d28-bf6c-64cea4f339cf",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792877082382
       }
     ]
   }

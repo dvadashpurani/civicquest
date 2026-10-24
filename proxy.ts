@@ -79,6 +79,6 @@ export const config = {
   matcher: [
     // Everything except Next build assets, the self-hosted icons, and static
     // image files. Server actions POST to their page route, so they pass here.
-    "/((?!_next/static|_next/image|icons/|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+    "/((?!_next/static|_next/image|icons/|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|wasm)$).*)",
   ],
 };

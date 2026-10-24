@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CivicQuest demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Lexend:wght@400;600&family=Overpass:wght@700;800&family=Public+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --kid-bg:#EEFAF8; --kid-dot:#D3EFEA; --kid-ink:#22223B; --kid-muted:#5B5B78; --kid-surface:#FFFFFF; --kid-soft:#E0F5F2;
+  --p:#2F8F5B; --s:#1D2B4F; --t:#F5B700; --p-soft:#DFF1E6;
+  --on-p:#FFFFFF; --on-t:#22223B;
+  --bg:#F6F7F8; --surface:#FFFFFF; --ink:#111827; --muted:#5B6472; --line:#E3E6EA; --accent:#00704A; --accent-soft:#E3F2EC; --yellow:#FFD23F;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --kid-bg:#EEFAF8; --kid-dot:#D3EFEA; --kid-ink:#22223B; --kid-muted:#5B5B78; --kid-surface:#FFFFFF; --kid-soft:#E0F5F2; --p-soft:#DFF1E6;
+    --bg:#0F1115; --surface:#181B21; --ink:#F2F4F7; --muted:#A3AAB5; --line:#2A2F38; --accent:#2FA176; --accent-soft:#16302A;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --kid-bg:#EEFAF8; --kid-dot:#D3EFEA; --kid-ink:#22223B; --kid-muted:#5B5B78; --kid-surface:#FFFFFF; --kid-soft:#E0F5F2; --p-soft:#DFF1E6;
+  --bg:#0F1115; --surface:#181B21; --ink:#F2F4F7; --muted:#A3AAB5; --line:#2A2F38; --accent:#2FA176; --accent-soft:#16302A;
+  color-scheme:dark;
+}
+[data-kid-theme="hero"]{--p:#E63946;--s:#1D3557;--t:#FFD166;--p-soft:#FBE0E2}
+[data-kid-theme="bubblegum"]{--p:#E8478C;--s:#7C4DDB;--t:#FFD6E8;--p-soft:#FCE1EE}
+[data-kid-theme="ocean"]{--p:#0284C7;--s:#0F766E;--t:#BAEFFA;--p-soft:#DDF2FB}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font-family:"Lexend",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5;background:var(--kid-bg);color:var(--kid-ink)}
+body.calm{background:var(--bg);color:var(--ink);font-family:"Public Sans",system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--kid-bg)}
+body.calm::before{background:var(--surface)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--p);outline-offset:3px}
+.e{font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif;line-height:1}
+
+/* top switcher */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--kid-bg);border-bottom:2px solid var(--kid-ink)}
+body.calm .top{background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{max-width:1040px;margin:0 auto;padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem}
+.brand{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1.35rem;display:flex;align-items:center;gap:.4rem}
+body.calm .brand{font-family:"Overpass",sans-serif}
+.switch{display:flex;border:2px solid var(--kid-ink);border-radius:999px;overflow:hidden}
+body.calm .switch{border:1px solid var(--line)}
+.switch button{border:0;background:transparent;padding:.4rem .9rem;font-weight:600;min-height:40px}
+.switch button[aria-pressed="true"]{background:var(--kid-ink);color:var(--kid-bg)}
+body.calm .switch button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+
+main{max-width:1040px;margin:0 auto;padding:1rem 1rem 6rem}
+.kid-main{background-image:radial-gradient(var(--kid-dot) 1.4px,transparent 1.4px);background-size:18px 18px}
+
+/* sticker book pieces */
+.hello{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:.4rem 0 1rem}
+.hello h1{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:clamp(1.9rem,6vw,2.8rem);line-height:1;margin:0}
+.ava{width:58px;height:58px;border-radius:50%;background:var(--t);border:2.5px solid var(--kid-ink);display:grid;place-items:center;font-size:2rem;box-shadow:3px 3px 0 var(--kid-ink);flex:none}
+.pills{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.1rem}
+.pill{display:flex;align-items:center;gap:.4rem;background:var(--kid-surface);border:2.5px solid var(--kid-ink);border-radius:999px;padding:.3rem .8rem;font-weight:600;box-shadow:3px 3px 0 var(--kid-ink)}
+.pill b{font-family:"Baloo 2",sans-serif;font-size:1.15rem}
+.card{background:var(--kid-surface);border:2.5px solid var(--kid-ink);border-radius:24px;box-shadow:5px 5px 0 var(--kid-ink);padding:1rem}
+.hero{background:var(--p-soft);display:grid;grid-template-columns:1fr;gap:.6rem;position:relative;overflow:hidden;padding:1.2rem}
+.hero .meta{display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:.3rem;background:var(--kid-surface);border:2px solid var(--kid-ink);border-radius:999px;padding:.15rem .7rem;font-weight:600;font-size:.9rem}
+.hero h2{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:clamp(2.2rem,8vw,3.4rem);line-height:.95;margin:.3rem 0 0}
+.hero p{margin:0;font-size:1.05rem}
+.hero .art{font-size:clamp(5rem,22vw,8.5rem);text-align:center;filter:drop-shadow(4px 5px 0 rgba(34,34,59,.25))}
+.kbtn{background:var(--p);color:var(--on-p);border:2.5px solid var(--kid-ink);border-radius:999px;padding:.8rem 1.4rem;font-weight:600;font-size:1.1rem;box-shadow:4px 4px 0 var(--kid-ink);min-height:64px;justify-self:start}
+.kbtn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--kid-ink)}
+.kbtn.alt{background:var(--kid-surface);color:var(--kid-ink)}
+.h3{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1.45rem;margin:1.4rem 0 .6rem;display:flex;justify-content:space-between;align-items:baseline}
+.h3 small{font-family:"Lexend",sans-serif;font-weight:400;font-size:.9rem;color:var(--kid-muted)}
+.week{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(120px,1fr);gap:.6rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:.2rem .3rem .8rem}
+.dayc{scroll-snap-align:start;background:var(--kid-surface);border:2.5px solid var(--kid-ink);border-radius:18px;padding:.7rem .5rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.25rem;box-shadow:3px 3px 0 var(--kid-ink);min-height:150px}
+.dayc .n{width:26px;height:26px;border-radius:50%;background:var(--s);color:#fff;font-weight:600;font-size:.8rem;display:grid;place-items:center}
+.dayc .ic{font-size:2.6rem;margin:.2rem 0}
+.dayc .wd{font-size:.8rem;color:var(--kid-muted);font-weight:600}
+.dayc .tt{font-weight:600;line-height:1.2}
+.dayc.today{border-color:var(--p);border-width:4px;background:var(--p-soft)}
+.dayc.done{opacity:.85}
+.dayc.done .n{background:var(--p)}
+.duo{display:grid;gap:1rem;margin-top:.4rem}
+.bar{height:16px;border:2.5px solid var(--kid-ink);border-radius:999px;background:var(--kid-surface);overflow:hidden;margin:.5rem 0 .8rem}
+.bar span{display:block;height:100%;background:repeating-linear-gradient(90deg,var(--p) 0 14px,var(--t) 14px 22px);transition:width .6s}
+.town{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.tile{aspect-ratio:1;border-radius:12px;background:var(--kid-soft);border:2px solid var(--kid-ink);display:grid;place-items:center;font-size:clamp(1.1rem,4.5vw,1.7rem)}
+.tile.empty{background:transparent;border:2px dashed var(--kid-muted);opacity:.5}
+.tile.new{animation:drop .8s cubic-bezier(.2,1.6,.4,1);background:var(--t)}
+@keyframes drop{0%{transform:translateY(-40px) scale(.4);opacity:0}100%{transform:none;opacity:1}}
+.stickers{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem}
+.stk{display:flex;flex-direction:column;align-items:center;gap:.2rem;text-align:center;font-size:.85rem;font-weight:600}
+.stk .disc{width:64px;height:64px;border-radius:50%;background:var(--t);border:4px solid #fff;box-shadow:0 0 0 2.5px var(--kid-ink),2px 3px 0 2.5px var(--kid-ink);display:grid;place-items:center;font-size:1.9rem}
+.stk:nth-child(1) .disc{transform:rotate(-8deg)}
+.stk:nth-child(2) .disc{transform:rotate(6deg);background:var(--p-soft)}
+.stk:nth-child(3) .disc{transform:rotate(-4deg)}
+.stk.locked .disc{background:transparent;border:2.5px dashed var(--kid-muted);box-shadow:none;filter:grayscale(1);opacity:.45}
+.stk.fresh .disc{animation:drop .8s cubic-bezier(.2,1.6,.4,1)}
+.stk span{color:var(--kid-muted);font-weight:400;font-size:.8rem}
+.themes{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-top:1.4rem;color:var(--kid-muted)}
+.themes button{border:2.5px solid var(--kid-ink);border-radius:999px;padding:.3rem .8rem;background:var(--kid-surface);font-weight:600;min-height:44px;display:flex;align-items:center;gap:.4rem}
+.themes button i{width:16px;height:16px;border-radius:50%;display:inline-block;border:2px solid var(--kid-ink)}
+.themes button[aria-pressed="true"]{background:var(--kid-ink);color:var(--kid-bg)}
+
+/* story & mission */
+.back{background:none;border:0;padding:.3rem 0;font-weight:600;color:var(--kid-muted);margin-bottom:.6rem;min-height:44px}
+.screen h1{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:clamp(2rem,7vw,3.2rem);line-height:1;margin:.2rem 0 1rem}
+.panels{display:grid;gap:.8rem}
+.panel{background:var(--kid-surface);border:2.5px solid var(--kid-ink);border-radius:20px;box-shadow:4px 4px 0 var(--kid-ink);overflow:hidden}
+.panel .sc{background:var(--p-soft);border-bottom:2.5px solid var(--kid-ink);padding:1rem;font-size:clamp(2.6rem,11vw,3.6rem);display:flex;justify-content:center;align-items:flex-end;gap:.4rem;min-height:120px}
+.panel p{margin:0;padding:.8rem 1rem;font-size:1.05rem}
+.panel:nth-child(2){transform:rotate(.8deg)}
+.ask{margin-top:1rem;background:var(--t);color:var(--on-t);border:2.5px solid var(--kid-ink);border-radius:20px;padding:1rem;font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1.4rem;box-shadow:4px 4px 0 var(--kid-ink)}
+.steps{display:grid;gap:.7rem;margin:0;padding:0;list-style:none}
+.steps li{display:flex;gap:.8rem;align-items:center;background:var(--kid-surface);border:2.5px solid var(--kid-ink);border-radius:18px;padding:.8rem 1rem;box-shadow:3px 3px 0 var(--kid-ink);font-size:1.1rem}
+.steps .e{font-size:2.4rem}
+.sticky{position:sticky;bottom:calc(.8rem + env(safe-area-inset-bottom,0px));margin-top:1.2rem;display:flex;justify-content:flex-end}
+.sticky .kbtn{width:100%;justify-content:center}
+.note{font-size:.9rem;color:var(--kid-muted);margin-top:.6rem}
+
+/* bottom tabs (mobile) */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:7;background:var(--kid-surface);border-top:2.5px solid var(--kid-ink);display:flex;justify-content:space-around;padding:.3rem .5rem calc(.3rem + env(safe-area-inset-bottom,0px))}
+.tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:.1rem;font-size:.78rem;font-weight:600;min-width:64px;min-height:52px;padding:.2rem;border-radius:12px}
+.tabs button .e{font-size:1.5rem}
+.tabs button[aria-current="page"]{background:var(--p-soft)}
+
+/* balloons */
+.overlay{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:20}
+.bal{position:absolute;bottom:-80px;font-size:3rem;animation:rise 2.6s ease-in forwards}
+@keyframes rise{82%{transform:translateY(-75vh);opacity:1}100%{transform:translateY(-80vh) scale(1.6);opacity:0}}
+.toast{position:fixed;left:50%;bottom:calc(5.5rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--kid-ink);color:var(--kid-bg);padding:.8rem 1.1rem;border-radius:16px;font-weight:600;max-width:min(92vw,460px);z-index:25;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.show{opacity:1}
+
+/* calm teacher */
+.calm-h1{font-family:"Overpass",sans-serif;font-weight:800;font-size:clamp(1.6rem,5vw,2.1rem);margin:.4rem 0 .2rem}
+.calm-sub{color:var(--muted);margin:0 0 1rem}
+.cgrid{display:grid;gap:1rem}
+.cpanel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1rem}
+.cpanel h2{font-family:"Overpass",sans-serif;font-weight:800;font-size:1.15rem;margin:0 0 .7rem}
+.row{display:flex;justify-content:space-between;align-items:center;gap:.8rem;padding:.7rem 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .l{display:flex;align-items:center;gap:.7rem}
+.row .e{font-size:1.8rem}
+.row small{color:var(--muted)}
+.tag{display:inline-block;font-size:.78rem;font-weight:700;padding:.05rem .5rem;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.cbtn{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:.55rem 1rem;font-weight:700;min-height:44px}
+.line{position:relative;display:grid;grid-template-columns:repeat(5,1fr)}
+.line::before{content:"";position:absolute;left:10%;right:10%;top:12px;height:4px;border-radius:2px;background:var(--line)}
+.stn{position:relative;display:flex;flex-direction:column;align-items:center;gap:.3rem;text-align:center;font-size:.8rem;color:var(--muted);line-height:1.2}
+.stn b{color:var(--ink);font-family:"Overpass",sans-serif}
+.dot{width:24px;height:24px;border-radius:50%;background:var(--surface);border:4px solid var(--line)}
+.stn.on .dot{border-color:var(--yellow);background:var(--ink)}
+.stn.done .dot{background:var(--accent);border-color:var(--accent)}
+
+
+.calm-back{color:var(--muted)}
+.row-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem}
+.pchips{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.5rem}
+.pchip{border:2px solid var(--accent);background:var(--accent-soft);border-radius:10px;padding:.6rem .7rem;text-align:left;font-weight:700;min-height:52px}
+.pchip[aria-pressed="false"]{border-color:var(--line);background:var(--surface);color:var(--muted);text-decoration:line-through}
+.csticky{position:sticky;bottom:calc(.8rem + env(safe-area-inset-bottom,0px));margin-top:1rem;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.7rem 1rem;display:flex;justify-content:space-between;align-items:center;gap:.8rem;flex-wrap:wrap}
+.cbtn.big{min-height:52px;padding:.7rem 1.3rem;font-size:1.05rem}
+.cbtn:disabled{opacity:.5;cursor:not-allowed}
+.cbtn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.cbtn.ghost.danger{color:#C8102E;border-color:#C8102E}
+.cbtn.danger-solid{background:#C8102E;color:#fff}
+.acts{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:flex-end}
+.cgrid1{display:grid;gap:1rem}
+.log{list-style:none;margin:0;padding:0;display:grid;gap:.6rem}
+.log li{display:flex;gap:.6rem;align-items:flex-start}
+.ldot{width:12px;height:12px;border-radius:50%;margin-top:.4rem;flex:none;background:var(--accent)}
+.ldot.edit{background:#1F4E9C}
+.ldot.undo{background:#C8102E}
+dialog{border:0;border-radius:14px;padding:0;max-width:min(92vw,480px);background:var(--surface);color:var(--ink);font-family:"Public Sans",sans-serif}
+body:not(.calm) dialog{--surface:#FFFFFF;--ink:#111827;--line:#E3E6EA}
+dialog::backdrop{background:rgba(17,24,39,.55)}
+.dlg{padding:1.3rem;display:grid;gap:.8rem}
+.dlg h2{font-family:"Overpass",sans-serif;font-weight:800;margin:0}
+.dlg p{margin:0}
+.dlg fieldset{border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem;display:grid;gap:.4rem}
+.dlg legend{font-weight:700;padding:0 .3rem}
+.dlg label{display:flex;gap:.5rem;align-items:center;min-height:36px}
+.dlg .small{font-size:.88rem;color:var(--muted)}
+.dlg-acts{display:flex;justify-content:flex-end;gap:.5rem;flex-wrap:wrap}
+@media (min-width:640px){
+  .tabs{display:none}
+  main{padding-bottom:3rem}
+  .hero{grid-template-columns:1.4fr 1fr;align-items:center}
+  .hero .art{grid-row:1 / span 4;grid-column:2}
+  .duo{grid-template-columns:1fr 1fr}
+  .panels{grid-template-columns:repeat(3,1fr)}
+  .sticky{position:static}
+  .sticky .kbtn{width:auto}
+  .toast{bottom:1.5rem}
+}
+@media (min-width:1024px){
+  .week{grid-auto-flow:initial;grid-template-columns:repeat(5,1fr);overflow:visible}
+  .cgrid{grid-template-columns:1.3fr 1fr}
+}
+@media (prefers-reduced-motion: reduce){
+  .tile.new,.stk.fresh .disc,.bal{animation:none}
+  .bal{display:none}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <div class="brand"><span class="e" aria-hidden="true">🏙️</span>CivicQuest</div>
+  <div class="switch" role="group" aria-label="Switch view">
+    <button data-mode="student" aria-pressed="true">Student</button>
+    <button data-mode="teacher" aria-pressed="false">Teacher</button>
+  </div>
+</div></header>
+<main id="app"></main>
+<nav class="tabs" id="tabs" aria-label="Student navigation">
+  <button data-tab="home" aria-current="page"><span class="e" aria-hidden="true">🏠</span>Home</button>
+  <button data-tab="week"><span class="e" aria-hidden="true">🗺️</span>Missions</button>
+  <button data-tab="town"><span class="e" aria-hidden="true">🏘️</span>Town</button>
+  <button data-tab="stickers"><span class="e" aria-hidden="true">🛡️</span>Stickers</button>
+</nav>
+<div class="overlay" id="overlay" aria-hidden="true"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<dialog id="undo"></dialog>
+
+<script>
+const DAYS=[
+  {n:1,wd:"Mon",t:"Stop, look, listen",ic:"🚶"},
+  {n:2,wd:"Tue",t:"Know your signals",ic:"🚦"},
+  {n:3,wd:"Wed",t:"Be seen",ic:"🦺"},
+  {n:4,wd:"Thu",t:"Bus safety",ic:"🚌"},
+  {n:5,wd:"Fri",t:"My safe route",ic:"📍"}
+];
+const START_TOWN=["🌳","🚸","🪑","♻️","🌳","🏫","🚏","🌱","🚸","🏞️","🪑","🏛️","🌳","🛝","♻️","🏥","🌳","🚲"];
+const THEMES=[["classic","Classic","#2F8F5B"],["hero","Hero","#E63946"],["bubblegum","Bubblegum","#E8478C"],["ocean","Ocean","#0284C7"]];
+const ROSTER=["Maya L.","Mateo M.","Priya P.","Liam K.","Zoe T.","Noah L.","Aisha S.","Ethan B.","Sofia D.","Kenji O.","Lucas C.","Amara H.","Leo A.","Isabel J.","Omar W.","Chloe N.","Diego G.","Hana E.","Jonah F.","Lila V.","Ravi R.","Nora M.","Sam P.","Ava K."];
+const S={mode:"student",screen:"home",theme:"classic",town:[...START_TOWN],points:142,safety:3,streak:3,
+  confirmed:false,present:new Set(ROSTER.map((_,i)=>i)),draft:null,editing:false,fresh:false,newTile:-1,log:[]};
+const app=document.getElementById("app");
+const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const now=()=>new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
+
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),3600)}
+function stage(n){return n>=36?"City":n>=25?"Town":n>=10?"Village":"Getting started"}
+const mayaIn=()=>S.confirmed&&S.present.has(0);
+function giveMaya(on){if(on){S.points+=10;S.safety+=1;S.streak+=1}else{S.points-=10;S.safety-=1;S.streak-=1}}
+
+function home(){
+  const today=S.confirmed?1:0;
+  const week=DAYS.map((d,i)=>`<div class="dayc ${i===today?"today":""} ${S.confirmed&&i===0?"done":""}"><span class="n">${S.confirmed&&i===0?"✓":d.n}</span><span class="ic e" aria-hidden="true">${d.ic}</span><span class="wd">${d.wd}</span><span class="tt">${d.t}</span></div>`).join("");
+  const tiles=Array.from({length:36},(_,i)=>S.town[i]?`<div class="tile e ${i===S.newTile?"new":""}">${S.town[i]}</div>`:`<div class="tile empty" aria-hidden="true"></div>`).join("");
+  const m=S.confirmed?DAYS[1]:DAYS[0];
+  const missed=S.confirmed&&!S.present.has(0);
+  return `<div class="kid-main">
+    <div class="hello"><h1>Welcome back, Maya!</h1><span class="ava e" aria-hidden="true">🦄</span></div>
+    <div class="pills">
+      <span class="pill"><span class="e" aria-hidden="true">🔥</span><b>${S.streak}</b> day streak</span>
+      <span class="pill"><span class="e" aria-hidden="true">⭐</span><b>${S.points}</b> points</span>
+      <span class="pill"><span class="e" aria-hidden="true">🏅</span><b>${S.safety+9}</b> stickers</span>
+    </div>
+    <section class="card hero" id="sec-home">
+      <div class="meta"><span class="chip"><span class="e" aria-hidden="true">🚸</span>Safe Streets, grade 3</span><span class="chip"><span class="e" aria-hidden="true">☀️</span>Day ${m.n}</span></div>
+      <h2>${m.t}</h2>
+      <p>${missed?"You missed yesterday’s mission, but your class still built a crosswalk. Tomorrow: the walk sign.":S.confirmed?"Tomorrow: learn what the walk sign really means.":"Learn how to cross the street like a pro."}</p>
+      ${S.confirmed?`<button class="kbtn alt" data-go="town">See our town</button>`:`<button class="kbtn" data-go="story">Start mission</button>`}
+      <div class="art e" aria-hidden="true">${S.confirmed?"🚦":"🦊"}</div>
+    </section>
+    <h3 class="h3" id="sec-week">This week’s missions <small>Week 1 of 10</small></h3>
+    <div class="week" aria-label="This week">${week}</div>
+    <div class="duo">
+      <section class="card" id="sec-town"><h3 class="h3" style="margin-top:0">Class town <small>${stage(S.town.length)}, ${S.town.length} of 36</small></h3>
+        <div class="bar" aria-hidden="true"><span style="width:${S.town.length/36*100}%"></span></div>
+        <div class="town" role="img" aria-label="Class town with ${S.town.length} buildings">${tiles}</div>
+        <p class="note">${25-S.town.length} more buildings until your class becomes a town and gets on the Good Citizens board.</p>
+      </section>
+      <section class="card" id="sec-stickers"><h3 class="h3" style="margin-top:0">My stickers <small>3 of 6 collected</small></h3>
+        <div class="stickers">
+          <div class="stk ${S.fresh?"fresh":""}"><span class="disc e" aria-hidden="true">🛡️</span>Safety<span>×${S.safety}</span></div>
+          <div class="stk"><span class="disc e" aria-hidden="true">⭐</span>Kindness<span>×4</span></div>
+          <div class="stk"><span class="disc e" aria-hidden="true">🤝</span>Helping<span>×2</span></div>
+          <div class="stk locked"><span class="disc e" aria-hidden="true">🏛️</span>Civic<span>Locked</span></div>
+        </div>
+        <p class="note"><strong>Next badge:</strong> Safety Star. Finish all five Safe Streets days.</p>
+      </section>
+    </div>
+    <div class="themes" role="group" aria-label="Pick your theme">My theme: ${THEMES.map(([k,l,c])=>`<button data-th="${k}" aria-pressed="${S.theme===k}"><i style="background:${c}"></i>${l}</button>`).join("")}</div>
+  </div>`;
+}
+
+function story(){
+  return `<div class="kid-main screen">
+    <button class="back" data-go="home">Back</button>
+    <span class="chip"><span class="e" aria-hidden="true">🦊</span>Pip’s story</span>
+    <h1>Stop, look, listen</h1>
+    <div class="panels">
+      <div class="panel"><div class="sc e" aria-hidden="true">🦊💨⚽</div><p>Pip’s ball rolls into the street. He runs after it without stopping.</p></div>
+      <div class="panel"><div class="sc e" aria-hidden="true">🚗📢😨</div><p>A car honks and stops just in time. Pip is safe, but very scared.</p></div>
+      <div class="panel"><div class="sc e" aria-hidden="true">✋👀👂</div><p>Next time, Pip stops at the curb, looks both ways, and listens.</p></div>
+    </div>
+    <div class="ask">Talk about it: What should Pip have done first?</div>
+    <div class="sticky"><button class="kbtn" data-go="mission">Show today’s mission</button></div>
+  </div>`;
+}
+function mission(){
+  return `<div class="kid-main screen">
+    <button class="back" data-go="story">Back to the story</button>
+    <span class="chip"><span class="e" aria-hidden="true">🚸</span>Safe Streets, day 1</span>
+    <h1>Let’s practice together</h1>
+    <ol class="steps">
+      <li><span class="e" aria-hidden="true">✋</span><span><strong>Stop</strong> at the curb, every time.</span></li>
+      <li><span class="e" aria-hidden="true">👀</span><span><strong>Look</strong> left, right, and left again.</span></li>
+      <li><span class="e" aria-hidden="true">👂</span><span><strong>Listen</strong> for cars you can’t see yet.</span></li>
+    </ol>
+    <div class="sticky"><button class="kbtn" data-roster>We finished the activity</button></div>
+  </div>`;
+}
+
+function roster(){
+  const sel=S.draft;
+  const chips=ROSTER.map((n,i)=>`<button class="pchip" aria-pressed="${sel.has(i)}" data-chip="${i}">${sel.has(i)?"✓ ":""}${n}</button>`).join("");
+  return `<button class="back calm-back" data-go="${S.editing?"teacher":"mission"}">${S.editing?"Cancel":"Back to the mission"}</button>
+  <h1 class="calm-h1">${S.editing?"Edit who took part":"Who took part?"}</h1>
+  <p class="calm-sub">Grade 3, Stop, look, listen. Tap a name to mark someone absent or present. Only checked students get points and a sticker.</p>
+  <div class="row-actions"><button class="cbtn ghost" data-all="1">Select everyone</button><button class="cbtn ghost" data-all="0">Clear all</button></div>
+  <div class="pchips">${chips}</div>
+  <div class="csticky"><strong>${sel.size} of ${ROSTER.length} students</strong><button class="cbtn big" data-save ${sel.size===0&&!S.editing?"disabled":""}>${S.editing?"Save changes":"Confirm for class"}</button></div>`;
+}
+
+function teacher(){
+  const st=DAYS.map((d,i)=>`<div class="stn ${S.confirmed&&i===0?"done":""} ${(S.confirmed?1:0)===i?"on":""}"><span class="dot"></span><b>${d.wd}</b>${d.t}</div>`).join("");
+  const g3=S.confirmed
+    ?`<div class="row"><div class="l"><span class="e" aria-hidden="true">🚶</span><div><strong>Grade 3</strong> <small>24 students</small><br>Stop, look, listen <span class="tag">Done, ${S.present.size} of 24</span></div></div><div class="acts"><button class="cbtn ghost" data-edit>Edit who took part</button><button class="cbtn ghost danger" data-undo>Undo</button></div></div>`
+    :`<div class="row"><div class="l"><span class="e" aria-hidden="true">🚶</span><div><strong>Grade 3</strong> <small>24 students</small><br>Stop, look, listen <span class="tag">Safety</span></div></div><button class="cbtn" data-run>Start</button></div>`;
+  const log=S.log.length?S.log.map(l=>`<li><span class="ldot ${l.kind}"></span><span><strong>${l.what}</strong><br><small>${l.detail}</small></span></li>`).join(""):`<li><small>No changes today yet. Confirmations, edits, and undos will appear here, and they can’t be deleted.</small></li>`;
+  return `<h1 class="calm-h1">Today’s missions</h1><p class="calm-sub">Maple Street School, signed in as Ms. Rivera.</p>
+  <div class="cgrid">
+    <div class="cgrid1">
+      <section class="cpanel"><h2>Your classes</h2>
+        ${g3}
+        <div class="row"><div class="l"><span class="e" aria-hidden="true">✉️</span><div><strong>Grade 7</strong> <small>22 students</small><br>Thank a community worker <span class="tag">Respect</span></div></div><button class="cbtn" data-soon>Start</button></div>
+      </section>
+      <section class="cpanel"><h2>Today’s proof log</h2><ul class="log">${log}</ul></section>
+    </div>
+    <section class="cpanel"><h2>Week 1: Safe Streets</h2><div class="line">${st}</div>
+      <p class="calm-sub" style="margin:1rem 0 0;font-size:.9rem">You can edit or undo a confirmation for 24 hours. After that, only a school admin can reverse it. Every change stays in the proof log.</p></section>
+  </div>`;
+}
+
+function render(){
+  const calm=S.mode==="teacher"||S.screen==="roster";
+  document.body.classList.toggle("calm",calm);
+  if(S.theme==="classic")document.body.removeAttribute("data-kid-theme");else document.body.setAttribute("data-kid-theme",S.theme);
+  document.querySelectorAll("[data-mode]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.mode===(S.screen==="roster"?"teacher":S.mode))));
+  document.getElementById("tabs").style.visibility=(!calm&&S.screen==="home")?"visible":"hidden";
+  app.innerHTML=S.screen==="roster"?roster():S.mode==="teacher"?teacher():({home,story,mission}[S.screen])();
+}
+
+function balloons(){
+  if(reduced)return;
+  const o=document.getElementById("overlay");
+  for(let i=0;i<22;i++){const b=document.createElement("span");b.className="bal e";b.textContent="🎈";b.style.left=(3+Math.random()*90)+"%";b.style.animationDelay=(Math.random()*.9)+"s";b.style.filter=`hue-rotate(${Math.floor(Math.random()*360)}deg)`;o.appendChild(b);setTimeout(()=>b.remove(),3800)}
+}
+function names(set){return [...set].map(i=>ROSTER[i]).join(", ")}
+
+function save(){
+  const sel=S.draft;
+  if(!S.editing){
+    S.present=new Set(sel);S.confirmed=true;
+    if(S.present.has(0))giveMaya(true);
+    S.newTile=S.town.length;S.town.push("🚸");S.fresh=S.present.has(0);
+    const absent=new Set(ROSTER.map((_,i)=>i).filter(i=>!S.present.has(i)));
+    S.log.unshift({kind:"ok",what:`Confirmed by Ms. Rivera, ${now()}`,detail:`${S.present.size} of 24 took part.${absent.size?" Absent: "+names(absent)+".":""}`});
+    balloons();
+    setTimeout(()=>{S.screen="home";S.mode="student";render();scrollTo({top:0});toast(S.present.has(0)?"Mission done! Maya got 10 points, a Safety sticker, and the class got a crosswalk.":"Mission done. Maya was marked absent, so she didn’t get points, but the class got a crosswalk.")},reduced?300:2400);
+    return;
+  }
+  const added=new Set([...sel].filter(i=>!S.present.has(i))),removed=new Set([...S.present].filter(i=>!sel.has(i)));
+  if(!added.size&&!removed.size){S.editing=false;S.screen="home";S.mode="teacher";render();toast("No changes.");return}
+  if(sel.size===0){S.editing=false;openUndo();return}
+  if(added.has(0))giveMaya(true);
+  if(removed.has(0))giveMaya(false);
+  S.present=new Set(sel);
+  const parts=[];if(added.size)parts.push("Added "+names(added));if(removed.size)parts.push("Removed "+names(removed));
+  S.log.unshift({kind:"edit",what:`Edited by Ms. Rivera, ${now()}`,detail:parts.join(". ")+`. Now ${S.present.size} of 24.`});
+  S.editing=false;S.screen="home";S.mode="teacher";S.fresh=false;S.newTile=-1;render();scrollTo({top:0});
+  toast("Saved. Points and stickers were updated for those students.");
+}
+
+function openUndo(){
+  const d=document.getElementById("undo");
+  d.innerHTML=`<form method="dialog" class="dlg">
+    <h2>Undo this mission?</h2>
+    <p>This removes the points and Safety stickers from ${S.present.size} students and takes the crosswalk out of the class town. The mission goes back to “not done,” so you can run it again.</p>
+    <fieldset><legend>Why are you undoing it?</legend>
+      <label><input type="radio" name="r" value="Pressed by mistake" checked> Pressed by mistake</label>
+      <label><input type="radio" name="r" value="The activity didn’t happen"> The activity didn’t happen</label>
+      <label><input type="radio" name="r" value="Wrong class"> Wrong class</label>
+    </fieldset>
+    <p class="small">The undo is saved in the proof log with your name and the time.</p>
+    <div class="dlg-acts"><button class="cbtn ghost" value="cancel">Keep it</button><button class="cbtn danger-solid" value="undo">Undo mission</button></div>
+  </form>`;
+  d.showModal();
+  d.onclose=()=>{
+    if(d.returnValue!=="undo")return;
+    const reason=d.querySelector('input[name="r"]:checked').value;
+    if(S.present.has(0))giveMaya(false);
+    const idx=S.town.lastIndexOf("🚸");if(idx>=0)S.town.splice(idx,1);
+    S.log.unshift({kind:"undo",what:`Undone by Ms. Rivera, ${now()}`,detail:`Reason: ${reason}. Points, stickers, and the crosswalk were removed.`});
+    S.confirmed=false;S.present=new Set(ROSTER.map((_,i)=>i));S.fresh=false;S.newTile=-1;S.mode="teacher";S.screen="home";render();
+    toast("Mission undone. You can run it again.");
+  };
+}
+
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b||b.closest("dialog"))return;
+  if(b.dataset.mode){S.mode=b.dataset.mode;S.screen="home";S.editing=false;render();scrollTo({top:0});return}
+  if(b.dataset.th){S.theme=b.dataset.th;S.fresh=false;S.newTile=-1;render();return}
+  if(b.dataset.go){
+    if(b.dataset.go==="town"){S.screen="home";render();document.getElementById("sec-town").scrollIntoView({behavior:"smooth"});return}
+    if(b.dataset.go==="teacher"){S.editing=false;S.screen="home";S.mode="teacher";render();return}
+    S.screen=b.dataset.go;render();scrollTo({top:0});return}
+  if(b.hasAttribute("data-roster")){S.draft=new Set(ROSTER.map((_,i)=>i));S.editing=false;S.screen="roster";render();scrollTo({top:0});return}
+  if(b.dataset.chip!==undefined){const i=+b.dataset.chip;S.draft.has(i)?S.draft.delete(i):S.draft.add(i);render();return}
+  if(b.dataset.all){S.draft=b.dataset.all==="1"?new Set(ROSTER.map((_,i)=>i)):new Set();render();return}
+  if(b.hasAttribute("data-save")){save();return}
+  if(b.hasAttribute("data-edit")){S.draft=new Set(S.present);S.editing=true;S.screen="roster";render();scrollTo({top:0});return}
+  if(b.hasAttribute("data-undo")){openUndo();return}
+  if(b.hasAttribute("data-run")){S.mode="student";S.screen="story";render();scrollTo({top:0});return}
+  if(b.hasAttribute("data-soon")){toast("In this demo, try the grade 3 mission.");return}
+  if(b.dataset.tab){
+    document.querySelectorAll("[data-tab]").forEach(t=>t.removeAttribute("aria-current"));
+    b.setAttribute("aria-current","page");
+    const id={home:"sec-home",week:"sec-week",town:"sec-town",stickers:"sec-stickers"}[b.dataset.tab];
+    document.getElementById(id).scrollIntoView({behavior:"smooth",block:"start"});
+  }
+});
+render();
+</script>
+</body>
+</html>

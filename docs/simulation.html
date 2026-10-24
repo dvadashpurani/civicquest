@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CivicQuest simulation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EEF3F1; --surface:#FFFFFF; --ink:#1D2B4F; --muted:#55617B; --line:#D3DDD9;
+  --green:#2F8F5B; --green-soft:#DCEFE3; --yellow:#F5B700; --yellow-soft:#FFF3CC;
+  --blue:#5BA4D9; --blue-soft:#E1EFFA; --red:#C8553D; --red-soft:#F8E1DB; --town:#CFE6D6;
+  --on-yellow:#1D2B4F;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#121A30; --surface:#1B2542; --ink:#E8EEF6; --muted:#A6B1C8; --line:#2C3A5E;
+    --green:#4FB57E; --green-soft:#1F3B33; --yellow:#F5B700; --yellow-soft:#3A3218;
+    --blue:#7CB8E6; --blue-soft:#1D3350; --red:#E07A63; --red-soft:#3D2420; --town:#1F3B33;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121A30; --surface:#1B2542; --ink:#E8EEF6; --muted:#A6B1C8; --line:#2C3A5E;
+  --green:#4FB57E; --green-soft:#1F3B33; --yellow:#F5B700; --yellow-soft:#3A3218;
+  --blue:#7CB8E6; --blue-soft:#1D3350; --red:#E07A63; --red-soft:#3D2420; --town:#1F3B33;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+h1,h2,h3,.display{font-family:"Fredoka","Trebuchet MS",system-ui,sans-serif;font-weight:600;line-height:1.15;margin:0}
+h1{font-size:1.9rem}
+h2{font-size:1.35rem}
+h3{font-size:1.1rem}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-inner{max-width:1040px;margin:0 auto;padding:.7rem 1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.brand{font-family:"Fredoka",sans-serif;font-weight:700;font-size:1.4rem;display:flex;align-items:center;gap:.45rem}
+.brand svg{width:28px;height:28px}
+.tabs{display:flex;gap:.35rem;overflow-x:auto;flex:1;justify-content:flex-end}
+.tab{border:1px solid var(--line);background:transparent;padding:.45rem .85rem;border-radius:999px;white-space:nowrap;font-weight:700;font-size:.95rem}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+main{max-width:1040px;margin:0 auto;padding:1.25rem 1rem 3rem}
+.note{background:var(--blue-soft);border-radius:12px;padding:.7rem 1rem;margin-bottom:1.25rem;font-size:.95rem}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+.sub{color:var(--muted)}
+.grid{display:grid;gap:1rem}
+.cols-3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.cols-2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1.1rem}
+.mission-card{display:flex;flex-direction:column;gap:.6rem}
+.pill{display:inline-block;font-size:.82rem;font-weight:700;padding:.15rem .6rem;border-radius:999px}
+.pill.learners{background:var(--yellow-soft)}
+.pill.helpers{background:var(--blue-soft)}
+.pill.leaders{background:var(--green-soft)}
+.pill.pending{background:var(--yellow-soft)}
+.pill.ok{background:var(--green-soft)}
+.btn{border:0;border-radius:12px;padding:.75rem 1.1rem;font-weight:700;font-size:1rem;min-height:48px}
+.btn.primary{background:var(--yellow);color:var(--on-yellow)}
+.btn.green{background:var(--green);color:#fff}
+.btn.ghost{background:transparent;border:1px solid var(--line)}
+.btn.big{min-height:64px;font-size:1.15rem;padding:1rem 1.5rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.done{color:var(--green);font-weight:700}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar>span{display:block;height:100%;background:var(--green)}
+.row{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.spread{display:flex;justify-content:space-between;align-items:center;gap:.6rem}
+table{width:100%;border-collapse:collapse}
+td,th{text-align:left;padding:.55rem .4rem;border-bottom:1px solid var(--line)}
+th{font-size:.85rem;color:var(--muted);font-weight:700}
+.rank{font-family:"Fredoka",sans-serif;font-weight:600;font-size:1.1rem;width:2rem}
+.you td{background:var(--yellow-soft)}
+.back{background:none;border:0;padding:0;color:var(--muted);font-weight:700;margin-bottom:1rem}
+.run{text-align:center;padding:2rem 1.25rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.run h1{font-size:clamp(2rem,6vw,3.4rem)}
+.run .instr{font-size:1.2rem;max-width:36rem}
+.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.5rem;width:100%;margin:.5rem 0 1rem}
+.chip{border:2px solid var(--green);background:var(--green-soft);border-radius:12px;padding:.55rem .6rem;font-weight:700;text-align:left;min-height:48px}
+.chip[aria-pressed="false"]{border-color:var(--line);background:transparent;color:var(--muted);text-decoration:line-through}
+.town-wrap{display:flex;flex-direction:column;gap:1rem}
+.town{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px;max-width:520px;width:100%}
+.tile{aspect-ratio:1;border-radius:10px;background:var(--town);display:grid;place-items:center}
+.tile svg{width:78%;height:78%}
+.tile.empty{background:transparent;border:2px dashed var(--line)}
+.tile.new{animation:place .9s cubic-bezier(.2,1.6,.4,1);box-shadow:0 0 0 3px var(--yellow)}
+@keyframes place{0%{transform:scale(0) rotate(-12deg)}100%{transform:scale(1) rotate(0)}}
+.seg{display:flex;gap:.35rem;flex-wrap:wrap}
+.seg button{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:.5rem .8rem;font-weight:700}
+.seg button[aria-pressed="true"]{border-color:var(--green);background:var(--green-soft)}
+.stage{font-family:"Fredoka",sans-serif;font-size:1.6rem;font-weight:600}
+.projector{position:fixed;inset:0;z-index:20;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:calc(1rem + env(safe-area-inset-top,0px)) 1rem calc(1rem + env(safe-area-inset-bottom,0px))}
+.projector .town{max-width:min(80vh,92vw)}
+.f-g{fill:#2F8F5B}.f-gd{fill:#22704A}.f-y{fill:#F5B700}.f-b{fill:#5BA4D9}.f-r{fill:#C8553D}.f-ink{fill:#1D2B4F}.f-w{fill:#FFFFFF}.f-brown{fill:#8A6A4A}.f-road{fill:#6B7480}
+.phone{max-width:380px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:32px;padding:1.25rem 1rem 1.5rem;display:flex;flex-direction:column;gap:1rem}
+.hours{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.stat{background:var(--paper);border-radius:14px;padding:.8rem}
+.stat .n{font-family:"Fredoka",sans-serif;font-size:1.9rem;font-weight:600;line-height:1}
+.stat .l{color:var(--muted);font-size:.9rem}
+.scanner{position:relative;aspect-ratio:1;border-radius:18px;background:#1D2B4F;overflow:hidden;display:grid;place-items:center;color:#fff}
+.scanner .frame{width:62%;aspect-ratio:1;border:3px solid #F5B700;border-radius:14px}
+.scanner .line{position:absolute;left:19%;right:19%;height:3px;background:#F5B700;top:19%;animation:scan 1.2s ease-in-out infinite alternate}
+@keyframes scan{to{top:79%}}
+.qr{background:#fff;padding:14px;border-radius:14px;width:220px;max-width:100%}
+.qr svg{display:block;width:100%;height:auto}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.8rem;margin-bottom:1rem}
+.overlay{position:fixed;inset:0;z-index:30;pointer-events:none;overflow:hidden}
+.balloon{position:absolute;bottom:-90px;width:46px;height:58px;border-radius:50% 50% 48% 48%;animation:rise 2.6s ease-in forwards}
+.balloon::after{content:"";position:absolute;left:50%;top:100%;width:1.5px;height:38px;background:var(--muted)}
+@keyframes rise{0%{transform:translateY(0)}82%{transform:translateY(-72vh) scale(1);opacity:1}100%{transform:translateY(-76vh) scale(1.7);opacity:0}}
+.static-cel{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);z-index:31;background:var(--yellow);color:var(--on-yellow);font-family:"Fredoka",sans-serif;font-size:1.6rem;padding:1rem 1.5rem;border-radius:16px}
+.toast{position:fixed;left:50%;bottom:calc(1.25rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;background:var(--ink);color:var(--paper);padding:.8rem 1.1rem;border-radius:12px;max-width:min(92vw,520px);font-weight:700;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.show{opacity:1}
+dialog{border:0;border-radius:18px;padding:0;max-width:min(92vw,560px);background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(18,26,48,.55)}
+.cert{padding:2rem;text-align:center;border:6px double var(--green);margin:10px;border-radius:12px;display:flex;flex-direction:column;gap:.7rem}
+.law{border-left:5px solid var(--yellow)}
+.muted{color:var(--muted)}
+.small{font-size:.9rem}
+
+.mini{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;width:96px}
+.mini i{aspect-ratio:1;border-radius:3px;background:var(--line)}
+.mini i.on{background:var(--green)}
+.card-top{display:flex;gap:1rem;align-items:flex-start;justify-content:space-between}
+.track{position:relative;margin:1.6rem 0 .4rem}
+.track .bar{height:10px}
+.mile{position:absolute;top:-6px;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;background:var(--surface);border:3px solid var(--line);display:grid;place-items:center;font-size:.7rem;font-weight:700}
+.mile.hit{border-color:var(--green);background:var(--green);color:#fff}
+.rewards{display:grid;gap:.5rem;margin-top:1.4rem}
+.reward{display:flex;gap:.7rem;align-items:flex-start;padding:.6rem .7rem;border-radius:12px;background:var(--paper)}
+.reward.hit{background:var(--green-soft)}
+.reward .tag{font-family:"Fredoka",sans-serif;font-weight:600;min-width:4.2rem}
+.proof{border-left:5px solid var(--green)}
+.proof dl{display:grid;grid-template-columns:auto 1fr;gap:.25rem .9rem;margin:.6rem 0 0}
+.proof dt{color:var(--muted);font-size:.9rem}
+.proof dd{margin:0;font-weight:700}
+.avatars{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:.6rem}
+.avatar-btn{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:.8rem .4rem;display:flex;flex-direction:column;align-items:center;gap:.3rem;min-height:104px;font-weight:700}
+.emoji{font-size:2.3rem;line-height:1}
+.passport{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));align-items:start}
+.stamps{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+.stamp{border-radius:14px;background:var(--paper);padding:.6rem .4rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.2rem}
+.stamp .ic{width:52px;height:52px;border-radius:50%;background:var(--town);display:grid;place-items:center;border:3px dashed var(--green)}
+.stamp .ic svg{width:70%;height:70%}
+.stamp .c{font-family:"Fredoka",sans-serif;font-size:1.3rem;font-weight:600;line-height:1}
+.stamp.fresh .ic{border-style:solid;border-color:var(--yellow);animation:place .9s cubic-bezier(.2,1.6,.4,1)}
+.timeline{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
+.timeline li{display:flex;gap:.6rem;align-items:flex-start}
+.timeline .dot{width:12px;height:12px;border-radius:50%;background:var(--green);margin-top:.35rem;flex:none}
+.timeline .dot.wait{background:var(--yellow)}
+.legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.4rem;margin-top:.6rem}
+.legend div{display:flex;align-items:center;gap:.45rem;font-size:.9rem}
+.legend svg{width:28px;height:28px;background:var(--town);border-radius:6px;padding:2px}
+
+.days{display:grid;grid-template-columns:repeat(5,minmax(140px,1fr));gap:.5rem;overflow-x:auto;padding-bottom:.2rem}
+.day{border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:.6rem .7rem;text-align:left;display:flex;flex-direction:column;gap:.2rem;min-height:92px}
+.day[aria-pressed="true"]{border:2px solid var(--green);background:var(--green-soft)}
+.day .wd{font-size:.8rem;color:var(--muted);font-weight:700}
+.day .tt{font-weight:700;line-height:1.25}
+.week-head{display:flex;justify-content:space-between;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.7rem}
+.detail{margin-top:1rem;display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));align-items:start}
+.story{background:var(--yellow-soft);border-radius:14px;padding:1rem}
+.story .who{font-family:"Fredoka",sans-serif;font-weight:600;font-size:1.05rem;margin-bottom:.3rem}
+.story .ask{margin-top:.6rem;font-weight:700}
+.comic{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.6rem;margin:.4rem 0}
+.comic figure{margin:0;background:var(--surface);border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.comic svg{display:block;width:100%;height:auto}
+.comic figcaption{padding:.5rem .6rem;font-size:.92rem}
+.facts{display:grid;gap:.6rem}
+.facts div{display:flex;gap:.6rem;align-items:flex-start}
+.facts .k{min-width:6.5rem;color:var(--muted);font-size:.9rem;font-weight:700}
+.facts svg{width:32px;height:32px;background:var(--town);border-radius:6px;padding:2px;flex:none}
+.run .story{text-align:left;max-width:44rem;width:100%;font-size:1.1rem}
+.today{background:var(--yellow);color:var(--on-yellow)}
+@media (prefers-reduced-motion: reduce){.stamp.fresh .ic{animation:none}}
+@media (prefers-reduced-motion: reduce){
+  .tile.new,.scanner .line{animation:none}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" class="f-g"/><polygon points="8,22 20,11 32,22" class="f-y"/><rect x="11" y="22" width="18" height="11" class="f-w"/><rect x="17.5" y="26" width="5" height="7" class="f-ink"/></svg>
+      CivicQuest
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Choose a role">
+      <button class="tab" role="tab" data-view="roadmap">Mission roadmap</button>
+      <button class="tab" role="tab" data-view="teacher">Teacher</button>
+      <button class="tab" role="tab" data-view="town">Class town</button>
+      <button class="tab" role="tab" data-view="kid">Student (grade 3)</button>
+      <button class="tab" role="tab" data-view="leader">Student (grade 11)</button>
+      <button class="tab" role="tab" data-view="partner">Partner</button>
+      <button class="tab" role="tab" data-view="admin">School admin</button>
+    </nav>
+  </div>
+</header>
+<main id="app"></main>
+<div id="overlay" class="overlay" aria-hidden="true"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<dialog id="cert"></dialog>
+
+<script>const P={teach:"Teacher watched the class activity",quiz:"Short quiz, checked by the app",photo:"Photo of the place or the work, no faces, teacher approves",qr:"QR check-in and check-out at the site, partner approves the hours",peer:"The other class’s teacher confirms"};
+const ROADMAP={
+learners:{label:"Learners, grades 2–5",guide:"Pip the fox",modules:[
+ {module:"Safe Streets",quality:"Safety",days:[
+  {title:"Stop, look, listen",story:"Pip’s ball rolls into the street, and he runs after it without stopping. A car honks and stops just in time. Pip is safe, but very scared.",ask:"What should Pip have done first?",todo:"Learn the three steps for crossing a street: stop at the curb, look left, right, and left again, and listen for cars. Practice them together as a class.",proof:P.teach,item:"crosswalk"},
+  {title:"Know your signals",story:"Pip sees the walk signal start blinking and runs anyway. The light changes when he’s only halfway across.",ask:"What does a blinking hand mean?",todo:"Learn what the walk sign, blinking hand, and steady hand mean, then play the signal game.",proof:P.quiz,item:"crosswalk"},
+  {title:"Be seen",story:"Pip walks home at dusk in a dark jacket. A driver doesn’t see him until the very last second.",ask:"How could Pip help drivers see him?",todo:"Learn why bright colors and reflectors help drivers see you. Find something reflective in the classroom.",proof:P.teach,item:"bikelane"},
+  {title:"Bus safety",story:"Pip drops his homework near the school bus wheel and reaches under the bus to grab it.",ask:"Who should Pip tell instead?",todo:"Learn the danger zone around a bus: take ten giant steps away, never reach near the wheels, and tell the driver if you drop something.",proof:P.teach,item:"busstop"},
+  {title:"My safe route",story:"Pip’s friend takes a shortcut through a parking lot where cars back out without seeing kids.",ask:"Is the shortcut worth it?",todo:"Draw a safe route from school to a nearby place, and mark every crosswalk on the way.",proof:P.teach,item:"bikelane"}]},
+ {module:"Kind Words",quality:"Kindness",days:[
+  {title:"Thank a helper",story:"Ms. Lu, the custodian, cleans the whole school every night. Pip realizes nobody has ever thanked her.",ask:"Who helps our school that we never thank?",todo:"Make thank-you cards for school helpers, like custodians, bus drivers, and cafeteria staff.",proof:P.teach,item:"bench"},
+  {title:"Kind words, hurtful words",story:"Pip laughs when a classmate drops her lunch tray. She looks like she wants to cry.",ask:"What could Pip have said instead?",todo:"Sort words and phrases into kind and hurtful, then practice what to say instead.",proof:P.quiz,item:"bench"},
+  {title:"Include someone",story:"A new kid eats lunch alone every day. Pip wonders if anyone has noticed.",ask:"How could Pip help?",todo:"Invite someone new to play or sit together at recess, then share how it went.",proof:P.teach,item:"playground"},
+  {title:"Say sorry and mean it",story:"Pip bumps into a friend, knocks over his block tower, and just walks away.",ask:"What makes a real apology?",todo:"Practice the three parts of a real apology: say what you did, say sorry, and offer to fix it.",proof:P.teach,item:"clinic"},
+  {title:"Ask for help",story:"Pip gets lost at the fair and is too scared to talk to anyone.",ask:"Who would be a safe person to ask?",todo:"Practice finding a safe helper, like a police officer or a store worker with a name tag, and saying your name and a grown-up’s phone number.",proof:P.teach,item:"clinic"}]},
+ {module:"Clean Planet",quality:"Responsibility",days:[
+  {title:"Sort it right",story:"Pip throws a soda can in the trash. It could have been recycled into a brand-new can.",ask:"Which bin should the can go in?",todo:"Play the sorting game: recycling, compost, or trash.",proof:P.quiz,item:"recycling"},
+  {title:"Litter detectives",story:"A plastic bag blows off the playground, into a storm drain, and all the way to the river where the ducks live.",ask:"Where does litter go when it rains?",todo:"With gloves on, find and pick up litter around the schoolyard as a class.",proof:P.teach,item:"park"},
+  {title:"Save water",story:"Pip leaves the tap running the whole time he brushes his teeth.",ask:"How much water could Pip save?",todo:"Learn three ways to save water at school and at home.",proof:P.teach,item:"garden"},
+  {title:"Lights off",story:"The classroom lights stay on all weekend with nobody inside.",ask:"Who could remember to switch them off?",todo:"Become the class power patrol: check that lights and screens are off when the room is empty.",proof:P.teach,item:"tree"},
+  {title:"Plant something",story:"The schoolyard has no shade, and kids get hot at recess.",ask:"What could make the schoolyard cooler?",todo:"Plant seeds in a cup or in the school garden.",proof:P.teach,item:"garden"}]}
+]},
+helpers:{label:"Helpers, grades 6–8",guide:"Case studies",modules:[
+ {module:"Neighborhood Helpers",quality:"Helping",days:[
+  {title:"Spot the problem",story:"A streetlight near school has been out for weeks. Students walk past it in the dark after practice, but nobody reports it, because everyone assumes someone else already did.",ask:"Why did nobody report it?",todo:"As a class, list problems you’ve noticed near school, like broken lights, faded crosswalks, or cracked sidewalks.",proof:P.teach,item:"clinic"},
+  {title:"Who fixes what",story:"A family reports a pothole to the school office, which can’t fix streets. The pothole stays for months.",ask:"Who should they have told?",todo:"Learn which problems go to the city’s 311 service, which go to the school, and which go to a property owner.",proof:P.quiz,item:"library"},
+  {title:"Report it right",story:"A report that says “broken thing on my street” gets ignored. One with the exact location, a photo, and a clear description gets fixed.",ask:"What makes a report useful?",todo:"With your teacher, write a clear report for one problem near school, with a photo of the place.",proof:P.photo,item:"busstop"},
+  {title:"Help a neighbor",story:"An older neighbor can’t carry groceries up the stairs since winter started, and she doesn’t want to ask anyone.",ask:"How could a class help safely?",todo:"Plan a safe way the class can help older neighbors, like a card drive or a food drive with a partner organization.",proof:P.teach,item:"foodbank"},
+  {title:"Follow up",story:"Two weeks after a class reported a broken streetlight, it’s fixed, and students walk home safer.",ask:"What changed because they spoke up?",todo:"Check on the problem your class reported, and share what happened.",proof:P.teach,item:"bikelane"}]},
+ {module:"Respect Everywhere",quality:"Respect",days:[
+  {title:"Public spaces are shared",story:"Someone carves initials into a new park bench. The city removes it for repairs, and nobody can sit there for a month.",ask:"Who pays for public spaces?",todo:"Discuss who pays for, uses, and takes care of public spaces like parks and libraries.",proof:P.teach,item:"bench"},
+  {title:"Thank a community worker",story:"The bus driver on route 9 has driven students safely for twelve years. Most riders don’t know her name.",ask:"Who keeps our community running?",todo:"As a class, write thank-you notes for people who keep the school and neighborhood running.",proof:P.photo,item:"bench"},
+  {title:"Rules have reasons",story:"Students think the no-running-in-the-hall rule is pointless, until two kids collide at a blind corner.",ask:"What problem does the rule solve?",todo:"Pick one school rule and work out the reason behind it.",proof:P.teach,item:"library"},
+  {title:"Disagree respectfully",story:"Two classmates argue about a change to the lunch schedule. It turns into insults, and neither point gets heard.",ask:"How could they disagree better?",todo:"Practice saying “I think… because…” and repeating back the other person’s point before answering.",proof:P.teach,item:"library"},
+  {title:"Respect online",story:"A joke about a classmate in a group chat gets screenshotted and shared around the whole school.",ask:"What should the group have done?",todo:"Write class rules for kind and safe group chats.",proof:P.teach,item:"school"}]},
+ {module:"Green Team",quality:"Responsibility",days:[
+  {title:"Waste audit",story:"A middle school checks its cafeteria trash and finds that much of it could have been recycled or composted.",ask:"What’s in our trash?",todo:"Count and sort what goes into one classroom bin for a day.",proof:P.teach,item:"recycling"},
+  {title:"Clean one spot",story:"The corner behind the school gym collects litter every week, and the wind blows it into the neighbor’s yard.",ask:"Whose job is it to clean?",todo:"With your class, clean one area of the schoolyard, then upload a photo of the place afterward.",proof:P.photo,item:"garden"},
+  {title:"Fix the recycling sign",story:"Students keep putting greasy pizza boxes in the recycling bin, which can spoil a whole batch.",ask:"How could a sign prevent that?",todo:"Make clear, picture-based recycling signs for the school bins.",proof:P.photo,item:"recycling"},
+  {title:"Energy detectives",story:"A class discovers its computers and lights stay on every night after everyone leaves.",ask:"How much energy is wasted?",todo:"Check lights, screens, and doors around school, and report what you find.",proof:P.teach,item:"tree"},
+  {title:"Green pledge",story:"Small habits add up when a whole class does them every day.",ask:"Which habit will we keep?",todo:"Choose one green habit as a class and keep it for a month.",proof:P.teach,item:"park"}]}
+]},
+leaders:{label:"Leaders, grades 9–12",guide:"Case studies",modules:[
+ {module:"Civics Project",quality:"Civic action",note:"Supports the Massachusetts student-led civics project requirement",days:[
+  {title:"Pick a problem",story:"Students at one high school notice there’s no crosswalk outside their school, even though hundreds of students cross the road every morning.",ask:"What problem in our community matters to us?",todo:"In groups, pick one non-partisan problem in your community that you want to work on.",proof:P.teach,item:"library"},
+  {title:"Research it",story:"The group finds out who uses the road, how often near-misses happen, and which office is in charge of crosswalks.",ask:"What do we need to know?",todo:"Research the problem: who it affects, why it happens, and what has already been tried.",proof:P.teach,item:"library"},
+  {title:"Make a plan and find who decides",story:"The group learns that crosswalks are decided by the city’s transportation department, with input from the city council.",ask:"Who can actually make this change?",todo:"Write an action plan, and find the person or office that can make the change, such as a city councilor or the school committee.",proof:P.teach,item:"school"},
+  {title:"Take action",story:"The group writes a short, polite letter with their research and presents it at a public meeting.",ask:"What action fits our plan?",todo:"Carry out your plan, such as a letter to a city official or a presentation to the school committee.",proof:P.teach,item:"school"},
+  {title:"Share the results",story:"Months later, a new crosswalk is painted, and the group presents what they learned to younger students.",ask:"What did we learn, and what’s next?",todo:"Present your project and its results to the class.",proof:P.teach,item:"library"}]},
+ {module:"Serve Your Community",quality:"Helping",days:[
+  {title:"Find your cause",story:"A student who loves animals spends her service hours at a shelter and ends up starting a pet food drive.",ask:"What cause do you care about?",todo:"List causes you care about and match them to partner opportunities in the app.",proof:P.teach,item:"library"},
+  {title:"Volunteer shift",story:"The food bank needs extra hands on Saturdays to sort donations before families arrive.",ask:"What does the shift involve?",todo:"Volunteer at a partner organization. Scan its code when you arrive and when you leave.",proof:P.qr,item:"foodbank"},
+  {title:"Reflect on service",story:"Colleges and scholarship programs often ask not just how many hours you served, but what you learned.",ask:"What did your shift teach you?",todo:"Write a short reflection about your volunteer shift.",proof:P.teach,item:"school"},
+  {title:"Organize a drive",story:"A class collects winter coats for a shelter by placing one donation box in every homeroom.",ask:"What does our partner need most?",todo:"Plan a donation drive with a partner organization.",proof:P.teach,item:"foodbank"},
+  {title:"Second shift",story:"Riverside Park Friends needs volunteers to clear the riverbank before spring.",ask:"Who else could you bring?",todo:"Do a second volunteer shift, checking in and out with the site’s code.",proof:P.qr,item:"park"}]},
+ {module:"Know Your City",quality:"Civic action",days:[
+  {title:"Who runs your city",story:"Many people know the president’s name but not their city councilor’s, even though the council decides on parks, buses, and school budgets.",ask:"Who represents you locally?",todo:"Find your city councilor and school committee members, and what each one decides.",proof:P.quiz,item:"library"},
+  {title:"How a decision gets made",story:"A town wants to add a bike lane. The idea goes through a proposal, a public meeting, public comments, and a vote.",ask:"Where can residents have a say?",todo:"Map the steps of one local decision, from idea to vote.",proof:P.teach,item:"bikelane"},
+  {title:"Watch a public meeting",story:"Public meetings usually set aside time for residents to speak, but few young people ever use it.",ask:"What got decided?",todo:"Attend or watch a recorded city council or school committee meeting, and note one decision.",proof:P.teach,item:"school"},
+  {title:"Write to an official",story:"A short, clear, polite message with one specific request is more likely to get a reply than a long, angry one.",ask:"What’s your one clear request?",todo:"Draft a non-partisan letter to a local official about a community issue.",proof:P.teach,item:"school"},
+  {title:"Read local news",story:"A local paper reports that the town library may cut its weekend hours.",ask:"Who would this affect?",todo:"Find one local news story and explain who it affects and who decides.",proof:P.teach,item:"firestation"}]},
+ {module:"Lead the Way",quality:"Helping",days:[
+  {title:"Plan a lesson for younger kids",story:"Third graders often listen to a high schooler about road safety more closely than to another poster on the wall.",ask:"What should younger kids know?",todo:"Plan a ten-minute Safe Streets lesson for a grade 3 class.",proof:P.teach,item:"school"},
+  {title:"Teach the lesson",story:"The grade 3 class gets to ask a real high schooler their questions about walking to school.",ask:"How did it go?",todo:"Teach your lesson to the younger class.",proof:P.peer,item:"school"},
+  {title:"Plan a cleanup",story:"A cleanup with a clear meeting spot, gloves, bags, and a partner organization gets far more volunteers than one posted at the last minute.",ask:"What do volunteers need to know?",todo:"Plan a park cleanup with a partner organization.",proof:P.teach,item:"park"},
+  {title:"Run the cleanup",story:"Volunteers arrive at the riverbank at 9 AM with gloves and bags ready.",ask:"How will you keep everyone safe?",todo:"Lead the cleanup. Volunteers check in and out with the site’s code.",proof:P.qr,item:"park"},
+  {title:"Share the results",story:"The school newsletter reports how many bags of trash students removed from the riverbank.",ask:"What impact did you have?",todo:"Report what the event achieved to the school.",proof:P.teach,item:"library"}]}
+]}
+};
+
+const WEEKDAYS=["Monday","Tuesday","Wednesday","Thursday","Friday"];
+function fromRoad(level,m,d,points,mins){const mod=ROADMAP[level].modules[m],day=mod.days[d];return {level,m,d,module:mod.module,day:d+1,title:day.title,quality:mod.quality,item:day.item,points,mins,proof:day.proof,instr:day.todo,story:day.story,ask:day.ask}}
+function fox(x,y,s,scared){const e=scared?2.6:1.8;return `<g transform="translate(${x} ${y}) scale(${s})"><path d="M10 30 Q32 32 27 12" stroke="#E8833A" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="27" cy="12" r="4" fill="#fff"/><ellipse cx="0" cy="22" rx="13" ry="16" fill="#E8833A"/><circle cx="0" cy="-4" r="13" fill="#E8833A"/><polygon points="-12,-9 -9,-26 -2,-15" fill="#E8833A"/><polygon points="12,-9 9,-26 2,-15" fill="#E8833A"/><ellipse cx="0" cy="2" rx="7" ry="5" fill="#fff"/><circle cx="-5" cy="-6" r="${e}" fill="#1D2B4F"/><circle cx="5" cy="-6" r="${e}" fill="#1D2B4F"/><circle cx="0" cy="0" r="1.8" fill="#1D2B4F"/></g>`}
+function scene(inner){return `<svg viewBox="0 0 200 140" aria-hidden="true"><rect width="200" height="140" fill="#DDEFF5"/><rect x="0" y="95" width="78" height="45" fill="#C9CFCC"/><rect x="78" y="95" width="122" height="45" fill="#6B7480"/><rect x="88" y="116" width="18" height="3" fill="#fff"/><rect x="124" y="116" width="18" height="3" fill="#fff"/><rect x="160" y="116" width="18" height="3" fill="#fff"/>${inner}</svg>`}
+function comicPip(){
+  const car=`<rect x="128" y="80" width="68" height="24" rx="6" fill="#5BA4D9"/><rect x="138" y="66" width="40" height="18" rx="5" fill="#5BA4D9"/><rect x="143" y="70" width="14" height="10" rx="2" fill="#fff"/><rect x="160" y="70" width="14" height="10" rx="2" fill="#fff"/><circle cx="142" cy="106" r="7" fill="#1D2B4F"/><circle cx="182" cy="106" r="7" fill="#1D2B4F"/><path d="M196 100 L200 100 M200 108 L200 108" stroke="#1D2B4F"/><path d="M200 112 l-0 0" />`;
+  const p1=scene(`<circle cx="118" cy="110" r="8" fill="#C8553D"/><path d="M24 70 h14 M20 80 h14 M24 90 h14" stroke="#55617B" stroke-width="2.5" stroke-linecap="round"/>${fox(58,66,.95,false)}`);
+  const p2=scene(`${car}<path d="M198 96 h-0" /><rect x="132" y="28" width="58" height="26" rx="8" fill="#fff"/><polygon points="150,54 158,54 152,62" fill="#fff"/><text x="161" y="46" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="15" font-weight="700" fill="#C8553D">Honk!</text><circle cx="110" cy="112" r="8" fill="#C8553D"/>${fox(98,70,.95,true)}<path d="M84 52 l-6 -6 M98 46 v-8 M112 52 l6 -6" stroke="#C8553D" stroke-width="2.5" stroke-linecap="round"/>`);
+  const p3=scene(`<rect x="86" y="18" width="108" height="44" rx="10" fill="#fff"/><polygon points="92,62 102,62 88,72" fill="#fff"/><text x="140" y="36" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="13" font-weight="700" fill="#1D2B4F">Stop. Look.</text><text x="140" y="53" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="13" font-weight="700" fill="#1D2B4F">Listen.</text>${fox(52,66,.95,false)}<circle cx="78" cy="132" r="0"/>`);
+  return `<div class="comic"><figure>${p1}<figcaption>Pip’s ball rolls into the street. He runs after it without stopping.</figcaption></figure><figure>${p2}<figcaption>A car honks and stops just in time. Pip is safe, but very scared.</figcaption></figure><figure>${p3}<figcaption>Next time, Pip stops at the curb, looks left, right, and left again, and listens.</figcaption></figure></div>`;
+}
+function storyCard(level,m,d){
+  const day=ROADMAP[level].modules[m].days[d];
+  const isPip=level==="learners";
+  const art=level==="learners"&&m===0&&d===0?comicPip():`<p>${day.story}</p>`;
+  return `<div class="story"><p class="who">${isPip?"🦊 Pip’s story":"Case study"}</p>${art}<p class="ask">Talk about it: ${day.ask}</p></div>`;
+}
+
+const ITEM_NAMES={tree:"tree",park:"park",bench:"bench",crosswalk:"crosswalk",library:"library",clinic:"clinic",busstop:"bus stop",recycling:"recycling center",garden:"community garden",playground:"playground",foodbank:"food bank",school:"school",bikelane:"bike lane",firestation:"fire station"};
+const TILES={
+  tree:'<rect x="18" y="24" width="4" height="10" class="f-brown"/><circle cx="20" cy="18" r="10" class="f-g"/>',
+  park:'<rect x="10" y="24" width="3" height="8" class="f-brown"/><circle cx="11.5" cy="19" r="7" class="f-g"/><rect x="26" y="22" width="3" height="10" class="f-brown"/><circle cx="27.5" cy="16" r="8" class="f-gd"/><rect x="4" y="32" width="32" height="3" rx="1.5" class="f-gd"/>',
+  bench:'<rect x="8" y="17" width="24" height="4" rx="1" class="f-brown"/><rect x="8" y="23" width="24" height="4" rx="1" class="f-brown"/><rect x="10" y="27" width="3" height="8" class="f-ink"/><rect x="27" y="27" width="3" height="8" class="f-ink"/>',
+  crosswalk:'<rect x="2" y="8" width="36" height="24" class="f-road"/><rect x="6" y="11" width="4" height="18" class="f-w"/><rect x="13" y="11" width="4" height="18" class="f-w"/><rect x="20" y="11" width="4" height="18" class="f-w"/><rect x="27" y="11" width="4" height="18" class="f-w"/><rect x="34" y="11" width="3" height="18" class="f-w"/>',
+  library:'<polygon points="6,16 20,7 34,16" class="f-b"/><rect x="8" y="16" width="24" height="17" class="f-w"/><rect x="11" y="18" width="3" height="13" class="f-b"/><rect x="18.5" y="18" width="3" height="13" class="f-b"/><rect x="26" y="18" width="3" height="13" class="f-b"/><rect x="6" y="33" width="28" height="3" class="f-ink"/>',
+  clinic:'<rect x="7" y="12" width="26" height="23" rx="2" class="f-w"/><rect x="18" y="16" width="4" height="12" class="f-r"/><rect x="14" y="20" width="12" height="4" class="f-r"/>',
+  busstop:'<rect x="12" y="8" width="3" height="27" class="f-ink"/><rect x="15" y="8" width="14" height="10" rx="2" class="f-y"/><rect x="18" y="26" width="16" height="4" rx="1" class="f-brown"/>',
+  recycling:'<rect x="9" y="10" width="22" height="4" rx="1" class="f-gd"/><rect x="11" y="14" width="18" height="21" rx="2" class="f-g"/><polygon points="20,18 25,27 15,27" class="f-w"/>',
+  garden:'<rect x="5" y="9" width="30" height="5" rx="2" class="f-brown"/><rect x="5" y="18" width="30" height="5" rx="2" class="f-brown"/><rect x="5" y="27" width="30" height="5" rx="2" class="f-brown"/><circle cx="11" cy="9" r="3" class="f-g"/><circle cx="20" cy="9" r="3" class="f-g"/><circle cx="29" cy="9" r="3" class="f-g"/><circle cx="11" cy="18" r="3" class="f-gd"/><circle cx="20" cy="18" r="3" class="f-gd"/><circle cx="29" cy="18" r="3" class="f-gd"/><circle cx="15" cy="27" r="3" class="f-y"/><circle cx="25" cy="27" r="3" class="f-r"/>',
+  playground:'<rect x="8" y="12" width="3" height="23" class="f-r"/><rect x="8" y="12" width="10" height="3" class="f-r"/><polygon points="18,12 34,33 30,35 15,15" class="f-y"/>',
+  foodbank:'<rect x="8" y="15" width="24" height="19" rx="1" class="f-brown"/><path d="M20 31 C12 25 13 19 17 19 C18.7 19 20 20.5 20 21.5 C20 20.5 21.3 19 23 19 C27 19 28 25 20 31 Z" class="f-r"/>',
+  school:'<rect x="8" y="16" width="24" height="19" class="f-y"/><polygon points="6,17 20,9 34,17" class="f-r"/><rect x="17" y="26" width="6" height="9" class="f-ink"/><rect x="19.5" y="2" width="1.5" height="8" class="f-ink"/><rect x="21" y="2" width="6" height="4" class="f-b"/>',
+  bikelane:'<rect x="2" y="8" width="36" height="24" class="f-road"/><rect x="2" y="13" width="36" height="2" class="f-g"/><circle cx="14" cy="25" r="4" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="26" cy="25" r="4" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M14 25 L19 19 L26 25 M18 19 L22 19" stroke="#fff" stroke-width="1.6" fill="none"/>',
+  firestation:'<rect x="6" y="9" width="28" height="4" class="f-ink"/><rect x="6" y="13" width="28" height="22" class="f-r"/><rect x="10" y="20" width="9" height="15" class="f-w"/><rect x="21" y="20" width="9" height="15" class="f-w"/>'
+};
+const tileSVG=k=>`<svg viewBox="0 0 40 40" role="img" aria-label="${ITEM_NAMES[k]}">${TILES[k]}</svg>`;
+const QUALITIES=[["Safety","crosswalk"],["Kindness","bench"],["Responsibility","recycling"],["Respect","library"],["Helping","clinic"],["Civic action","school"]];
+const STAGES=[{n:10,name:"Village",reward:"The class picks a game for Friday afternoon."},{n:25,name:"Town",reward:"The class goes on the school’s Good Citizens board."},{n:36,name:"City",reward:"The principal visits for a class celebration."}];
+const NAMES=["Ava","Mateo","Priya","Liam","Zoe","Noah","Aisha","Ethan","Sofia","Kenji","Maya","Lucas","Amara","Leo","Isabel","Omar","Chloe","Diego","Hana","Jonah","Lila","Ravi","Nora","Sam","Elena","Marcus","Tariq","Grace","Ines","Felix"];
+const INITIALS="RMPKTLSBDOCHAJNWGEFV";
+const EMOJI=["🦊","🐼","🐢","🦉","🐸","🐯","🐨","🐰","🐙","🦁","🐧","🐻","🦄","🐝","🐳","🦒","🐞","🐶","🐱","🐹","🦔","🐬","🦋","🐮"];
+function roster(n,offset){return Array.from({length:n},(_,i)=>NAMES[(i+offset)%NAMES.length]+" "+INITIALS[(i*7+offset)%INITIALS.length]+".")}
+function kids(names){return names.map((n,i)=>({name:n,emoji:EMOJI[i%EMOJI.length],points:110+(i*37)%40,stamps:{Safety:2+(i%3),Kindness:3+(i%2),Responsibility:2+(i*5%3),Respect:1+(i%2),Helping:1+(i*3%2),"Civic action":0},fresh:null,
+  history:[{title:"Sort it right",module:"Clean Planet, day 1",by:"Ms. Rivera",when:"Thursday"},{title:"Thank a helper",module:"Kind Words, day 1",by:"Ms. Rivera",when:"Wednesday"}]}))}
+
+function freshState(){
+  const g3names=roster(24,0);
+  return {
+    view:"teacher", road:{level:"learners",m:0,d:0}, runClass:null, runStep:1, absent:new Set(), townClass:"g3", lastAdded:null, projector:false, kid:null,
+    classes:{
+      g3:{name:"Grade 3",teacher:"Ms. Rivera",level:"learners",students:24,points:3120,roster:g3names,kids:kids(g3names),
+        town:["tree","crosswalk","bench","recycling","tree","school","busstop","garden","crosswalk","park","bench","library","tree","playground","recycling","clinic","tree","crosswalk"],
+        mission:fromRoad("learners",0,0,10,5)},
+      g7:{name:"Grade 7",teacher:"Mr. Chen",level:"helpers",students:22,points:2310,roster:roster(22,6),
+        town:["park","bench","recycling","garden","busstop","tree","library","bikelane","tree","clinic","recycling","garden"],
+        mission:fromRoad("helpers",1,1,10,10)},
+      g11:{name:"Grade 11 Advisory",teacher:"Ms. Okafor",level:"leaders",students:20,points:1900,roster:roster(20,12),
+        town:["foodbank","library","park","school","garden","bikelane","firestation","clinic","foodbank"],
+        mission:fromRoad("leaders",0,2,15,20)}
+    },
+    done:{},
+    records:[
+      {cls:"Grade 3",title:"Sort it right",by:"Ms. Rivera",when:"Thursday, 1:40 PM",count:23,of:24,absent:["Omar W."],proof:"Teacher watched the class activity"},
+      {cls:"Grade 7",title:"Clean one spot",by:"Mr. Chen",when:"Thursday, 11:05 AM",count:22,of:22,absent:[],proof:"3 photos of the cleaned schoolyard, approved"},
+      {cls:"Grade 11 Advisory",title:"Saturday food sort",by:"Dana K., Greater Community Food Bank",when:"Last Saturday",count:6,of:6,absent:[],proof:"QR check-in and check-out, hours approved by partner"}
+    ],
+    leader:{status:"idle",verified:6.5,pending:0},
+    qrSeed:7,
+    partnerRows:[{name:"Elena R.",grade:11,hours:2.5,status:"approved"},{name:"Marcus T.",grade:12,hours:2.25,status:"pending"}],
+    weekMissions:48, baseHours:41.5
+  };
+}
+let S=freshState();
+const LEVEL_LABEL={learners:"Learners, grades 2–5",helpers:"Helpers, grades 6–8",leaders:"Leaders, grades 9–12"};
+const EXTRA_CLASSES=[{name:"Grade 4",teacher:"Mr. Alvarez",students:23,points:2700},{name:"Grade 10",teacher:"Ms. Patel",students:21,points:2000}];
+const app=document.getElementById("app");
+const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const nowLabel=()=>"Today, "+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
+
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("show"),3600)}
+function stageOf(n){return n>=36?"City":n>=25?"Town":n>=10?"Village":"Just getting started"}
+function nextStageText(n){const st=STAGES.find(x=>n<x.n);return st?`${st.n-n} more buildings to become a ${st.name.toLowerCase()}`:"Your class built a whole city"}
+
+function leaderboard(){
+  const rows=[...Object.entries(S.classes).map(([id,c])=>({id,name:c.name,teacher:c.teacher,students:c.students,points:c.points})),...EXTRA_CLASSES]
+    .map(r=>({...r,pps:Math.round(r.points/r.students)})).sort((a,b)=>b.pps-a.pps);
+  return `<table><thead><tr><th>#</th><th>Class</th><th>Points per student</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td class="rank">${i+1}</td><td><strong>${r.name}</strong><br><span class="small muted">${r.teacher}</span></td><td>${r.pps}</td></tr>`).join("")}</tbody></table>`;
+}
+function townGrid(c,newIdx){
+  let cells="";
+  for(let i=0;i<36;i++){const k=c.town[i];cells+=k?`<div class="tile${i===newIdx?" new":""}">${tileSVG(k)}</div>`:`<div class="tile empty" aria-hidden="true"></div>`}
+  return `<div class="town" role="img" aria-label="${c.name} town with ${c.town.length} of 36 buildings">${cells}</div>`;
+}
+const mini=c=>`<div class="mini" aria-hidden="true">${Array.from({length:36},(_,i)=>`<i class="${i<c.town.length?"on":""}"></i>`).join("")}</div>`;
+function proofCard(r,title){
+  return `<section class="panel proof"><h2>${title||"Mission record"}</h2><dl>
+    <dt>Mission</dt><dd>${r.title}</dd><dt>Class</dt><dd>${r.cls}</dd><dt>Confirmed by</dt><dd>${r.by}</dd><dt>When</dt><dd>${r.when}</dd>
+    <dt>Took part</dt><dd>${r.count} of ${r.of} students</dd><dt>Absent</dt><dd>${r.absent.length?r.absent.join(", "):"Nobody"}</dd><dt>Proof</dt><dd>${r.proof}</dd></dl></section>`;
+}
+
+function viewTeacher(){
+  const cards=Object.entries(S.classes).map(([id,c])=>{
+    const m=c.mission,d=S.done[id];
+    return `<article class="panel mission-card">
+      <div class="card-top"><div><h2>${c.name}</h2><p class="sub">${c.teacher}, ${c.students} students</p><span class="pill ${c.level}">${LEVEL_LABEL[c.level].split(",")[0]}</span></div>${mini(c)}</div>
+      <p class="small muted">${m.module}, day ${m.day}</p>
+      <h3>${m.title}</h3>
+      <p class="small">${m.quality} mission, about ${m.mins} minutes, ${m.points} points each</p>
+      <p class="small"><strong>Proof:</strong> ${m.proof}</p>
+      ${d?`<p class="done">Done today. Confirmed for ${d} students.</p>`:`<button class="btn primary" data-start="${id}">Start mission</button>`}
+    </article>`}).join("");
+  return `<p class="note">This is a clickable simulation with demo data. Switch roles at the top to see each part of CivicQuest.</p>
+  <div class="head"><div><h1>Today’s missions</h1><p class="sub">Maple Street School, teacher view</p></div></div>
+  <div class="grid cols-3">${cards}</div>
+  <section class="panel" style="margin-top:1rem"><div class="spread" style="margin-bottom:.4rem"><h2>School leaderboard</h2><span class="small muted">Classes compete, not kids</span></div>${leaderboard()}</section>`;
+}
+
+function viewRun(){
+  const c=S.classes[S.runClass],m=c.mission;
+  if(S.runStep===1){
+    return `<button class="back" data-go="teacher">Back to today’s missions</button>
+    <section class="panel run">
+      <p class="sub">${c.name}, ${m.module}, day ${m.day}</p>
+      <h1>${m.title}</h1>
+      ${storyCard(m.level,m.m,m.d)}
+      <button class="btn primary big" data-step="2">Show today’s mission</button>
+      <p class="small muted">Start with the story so students understand why the mission matters. Shown large for the classroom projector.</p>
+    </section>`;
+  }
+  if(S.runStep===2){
+    return `<button class="back" data-step="1">Back to the story</button>
+    <section class="panel run">
+      <p class="sub">${c.name}, ${m.module}, day ${m.day}</p>
+      <h1>${m.title}</h1>
+      <span class="pill ${c.level}">${m.quality}</span>
+      <p class="instr">${m.instr}</p>
+      <button class="btn primary big" data-step="3">We finished the activity</button>
+    </section>`;
+  }
+  const count=c.students-S.absent.size;
+  return `<button class="back" data-step="2">Back to the mission</button>
+  <section class="panel">
+    <h2>Who took part?</h2>
+    <p class="sub">Everyone starts checked. Tap anyone who was absent. Your confirmation is saved as the proof, with your name and the time.</p>
+    <div class="chips">${c.roster.map((n,i)=>`<button class="chip" aria-pressed="${!S.absent.has(i)}" data-chip="${i}">${n}</button>`).join("")}</div>
+    <div class="spread"><strong>${count} of ${c.students} students</strong><button class="btn green big" data-confirm ${count===0?"disabled":""}>Confirm for class</button></div>
+  </section>`;
+}
+
+function viewRoadmap(){
+  const R=S.road,L=ROADMAP[R.level];
+  const todayFor=(lv,m,d)=>Object.values(S.classes).filter(c=>c.mission.level===lv&&c.mission.m===m&&c.mission.d===d).map(c=>c.name);
+  const seg=Object.entries(ROADMAP).map(([k,v])=>`<button aria-pressed="${k===R.level}" data-level="${k}">${v.label}</button>`).join("");
+  const weeks=L.modules.map((mod,mi)=>{
+    const days=mod.days.map((d,di)=>{const t=todayFor(R.level,mi,di);return `<button class="day" aria-pressed="${R.m===mi&&R.d===di}" data-road="${mi},${di}"><span class="wd">${WEEKDAYS[di]}</span><span class="tt">${d.title}</span>${t.length?`<span class="pill today">Today: ${t.join(", ")}</span>`:""}</button>`}).join("");
+    let detail="";
+    if(R.m===mi){const d=mod.days[R.d];detail=`<div class="detail">${storyCard(R.level,mi,R.d)}<div class="facts">
+      <div><span class="k">Students do</span><span>${d.todo}</span></div>
+      <div><span class="k">Proof</span><span>${d.proof}</span></div>
+      <div><span class="k">Builds</span>${tileSVG(d.item)}<span>A ${ITEM_NAMES[d.item]} in the class town</span></div>
+      <div><span class="k">Stamp</span><span>${mod.quality}</span></div></div></div>`}
+    return `<section class="panel"><div class="week-head"><h2>Week ${mi+1}: ${mod.module}</h2><span class="row"><span class="pill ${R.level}">${mod.quality}</span>${mod.note?`<span class="small muted">${mod.note}</span>`:""}</span></div><div class="days">${days}</div>${detail}</section>`;
+  }).join("");
+  return `<div class="head"><div><h1>Mission roadmap</h1><p class="sub">One mission each school day. Each week is one module, Monday to Friday. Every mission starts with a short story so students see why it matters.</p></div></div>
+  <div class="seg" style="margin-bottom:1rem">${seg}</div>
+  <div class="grid">${weeks}</div>
+  <p class="small muted" style="margin-top:1rem">After the last week, the cycle repeats with harder versions, and teachers can reorder weeks to fit their calendar.</p>`;
+}
+
+function viewTown(){
+  const c=S.classes[S.townClass],n=c.town.length;
+  const seg=Object.entries(S.classes).map(([id,cl])=>`<button aria-pressed="${id===S.townClass}" data-town="${id}">${cl.name}</button>`).join("");
+  const newIdx=S.lastAdded&&S.lastAdded.cls===S.townClass?S.lastAdded.idx:-1;
+  const track=`<div class="track" aria-hidden="true"><div class="bar"><span style="width:${n/36*100}%"></span></div>${STAGES.map(st=>`<span class="mile ${n>=st.n?"hit":""}" style="left:${st.n/36*100}%">${n>=st.n?"✓":""}</span>`).join("")}</div>`;
+  const rewards=`<div class="rewards">${STAGES.map(st=>`<div class="reward ${n>=st.n?"hit":""}"><span class="tag">${st.name}</span><span>${st.n} buildings. ${st.reward}${n>=st.n?" <strong>Unlocked.</strong>":""}</span></div>`).join("")}</div>`;
+  const head=`<div><p class="stage">${stageOf(n)}</p><p class="sub">${n} of 36 buildings. ${nextStageText(n)}.</p></div>`;
+  if(S.projector){
+    return `<div class="projector"><h1>${c.name}’s town</h1>${head}${townGrid(c,newIdx)}<button class="btn ghost" data-projector="off">Close projector view</button></div>`;
+  }
+  const latest=S.lastAdded&&S.lastAdded.cls===S.townClass?proofCard(S.records[0],"Saved mission record"):"";
+  return `<div class="head"><div><h1>Class town</h1><p class="sub">Every confirmed mission adds a building. The whole class builds it together.</p></div><button class="btn ghost" data-projector="on">Show on projector</button></div>
+  <div class="seg" style="margin-bottom:1rem">${seg}</div>
+  <div class="grid cols-2" style="align-items:start">
+    <section class="panel town-wrap">${head}${townGrid(c,newIdx)}</section>
+    <div class="grid">
+      ${latest}
+      <section class="panel"><h2>What the class earns</h2><p class="small muted">The teacher sets these real-world rewards. Everyone shares them, so nobody is left behind.</p>${track}${rewards}</section>
+      <section class="panel"><h2>Which mission builds what</h2><div class="legend">${QUALITIES.map(([q,k])=>`<div>${tileSVG(k)}<span>${q}</span></div>`).join("")}</div></section>
+    </div>
+  </div>`;
+}
+
+function viewKid(){
+  const c=S.classes.g3;
+  if(S.kid===null){
+    return `<div class="head"><div><h1>Who’s using the tablet?</h1><p class="sub">Grade 3 class mode, on the teacher’s tablet. Students tap their picture or scan their QR login card.</p></div></div>
+    <div class="avatars">${c.kids.map((k,i)=>`<button class="avatar-btn" data-kid="${i}"><span class="emoji" aria-hidden="true">${k.emoji}</span>${k.name}</button>`).join("")}</div>`;
+  }
+  const k=c.kids[S.kid];
+  const stamps=QUALITIES.map(([q,ic])=>`<div class="stamp ${k.fresh===q?"fresh":""}"><div class="ic">${tileSVG(ic)}</div><div class="c">${k.stamps[q]}</div><div class="small">${q}</div></div>`).join("");
+  const hist=k.history.slice(0,4).map(h=>`<li><span class="dot"></span><span><strong>${h.title}</strong><br><span class="small muted">${h.module}. Confirmed by ${h.by}, ${h.when}.</span></span></li>`).join("");
+  return `<button class="back" data-kid="none">Next student</button>
+  <div class="passport">
+    <section class="panel" style="display:flex;flex-direction:column;gap:.8rem;align-items:center;text-align:center">
+      <span class="emoji" style="font-size:4rem" aria-hidden="true">${k.emoji}</span>
+      <h1>${k.name}</h1>
+      <div class="stat" style="width:100%"><div class="n">${k.points}</div><div class="l">My points</div></div>
+      <p class="small muted">Points fill your stamp passport and unlock badges. There’s no ranking against classmates.</p>
+    </section>
+    <section class="panel"><h2 style="margin-bottom:.6rem">My stamp passport</h2><div class="stamps">${stamps}</div>
+      <p class="small" style="margin-top:.8rem"><strong>Next badge:</strong> Safety Star, for finishing every Safe Streets mission.</p></section>
+    <section class="panel"><h2 style="margin-bottom:.6rem">Missions I did</h2><ul class="timeline">${hist}</ul></section>
+  </div>`;
+}
+
+function viewLeader(){
+  const L=S.leader;let action="";
+  if(L.status==="idle") action=`<button class="btn primary big" data-scan="in">Scan check-in code</button>`;
+  else if(L.status==="scanning") action=`<div class="scanner" aria-label="Scanning"><div class="frame"></div><div class="line"></div></div><p class="small muted" style="text-align:center">Point your camera at the code at the site.</p>`;
+  else if(L.status==="in") action=`<button class="btn primary big" data-scan="out">Scan to check out</button>`;
+  else if(L.status==="pending") action=`<p class="small">Switch to Partner to approve these hours.</p>`;
+  else action=`<button class="btn ghost" data-cert>View certificate</button>`;
+  const steps=[];
+  if(["in","pending","approved"].includes(L.status)||L.status==="scanning"&&L.was==="in") steps.push(["Checked in at the food bank","10:02 AM, scanned the site’s code",true]);
+  if(["pending","approved"].includes(L.status)) steps.push(["Checked out","12:17 PM, 2.25 hours calculated",true]);
+  if(L.status==="pending") steps.push(["Waiting for the food bank","A supervisor must approve the hours",false]);
+  if(L.status==="approved") steps.push(["Approved by Dana K.","Food bank supervisor, 12:30 PM",true]);
+  const proof=steps.length?`<section><h3 style="margin-bottom:.4rem">Proof of today’s hours</h3><ul class="timeline">${steps.map(([a,b,ok])=>`<li><span class="dot ${ok?"":"wait"}"></span><span><strong>${a}</strong><br><span class="small muted">${b}</span></span></li>`).join("")}</ul></section>`:"";
+  return `<div class="phone">
+    <div><p class="small muted">Signed in as</p><h2>Jordan M., grade 11</h2></div>
+    <div class="hours"><div class="stat"><div class="n">${L.verified}</div><div class="l">Verified hours</div></div><div class="stat"><div class="n">${L.pending}</div><div class="l">Waiting for approval</div></div></div>
+    <section><h3>Today</h3><p><strong>Saturday food sort</strong></p><p class="small muted">Greater Community Food Bank, 10:00 AM to 12:30 PM</p></section>
+    ${proof}
+    ${action}
+    <section><h3>Coming up</h3><p><strong>Riverbank cleanup</strong></p><p class="small muted">Riverside Park Friends, next Saturday</p></section>
+    <p class="small muted">Hours count only after the organization approves them. Counselors can export them for graduation and college applications.</p>
+  </div>`;
+}
+
+function qrSVG(seed){
+  const N=25;let s=seed*9301+49297;const rnd=()=>(s=(s*9301+49297)%233280)/233280;
+  let r="";const finder=(x,y)=>{r+=`<rect x="${x}" y="${y}" width="7" height="7" fill="#1D2B4F"/><rect x="${x+1}" y="${y+1}" width="5" height="5" fill="#fff"/><rect x="${x+2}" y="${y+2}" width="3" height="3" fill="#1D2B4F"/>`};
+  const inF=(x,y)=>(x<8&&y<8)||(x>N-9&&y<8)||(x<8&&y>N-9);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){if(!inF(x,y)&&rnd()>.52)r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="#1D2B4F"/>`}
+  finder(0,0);finder(N-7,0);finder(0,N-7);
+  return `<svg viewBox="0 0 ${N} ${N}" role="img" aria-label="Check-in QR code (demo)" shape-rendering="crispEdges">${r}</svg>`;
+}
+
+function viewPartner(){
+  const L=S.leader;
+  const rows=[...S.partnerRows];
+  if(L.status==="in") rows.push({name:"Jordan M.",grade:11,hours:null,status:"in",me:true});
+  if(L.status==="pending") rows.push({name:"Jordan M.",grade:11,hours:2.25,status:"pending",me:true});
+  if(L.status==="approved") rows.push({name:"Jordan M.",grade:11,hours:2.25,status:"approved",me:true});
+  const anyPending=rows.some(r=>r.status==="pending");
+  const tr=rows.map((r,i)=>`<tr><td><strong>${r.name}</strong><br><span class="small muted">Grade ${r.grade}</span></td><td>${r.hours==null?"Still here":r.hours+" h"}</td><td>${r.status==="approved"?'<span class="pill ok">Approved</span>':r.status==="pending"?`<button class="btn green" data-approve="${r.me?"me":i}">Approve hours</button>`:'<span class="pill pending">Checked in</span>'}</td></tr>`).join("");
+  return `<div class="head"><div><h1>Greater Community Food Bank</h1><p class="sub">Partner organization view, signed in as Dana K.</p></div></div>
+  <div class="grid cols-2" style="align-items:start">
+    <section class="panel" style="display:flex;flex-direction:column;align-items:center;gap:.8rem;text-align:center">
+      <h2>Saturday food sort</h2><p class="small muted">Today, 10:00 AM to 12:30 PM, for grades 9–12</p>
+      <div class="qr">${qrSVG(S.qrSeed)}</div>
+      <p class="small">Display this at the site. Students scan it when they arrive and when they leave.</p>
+      <button class="btn ghost" data-regen>Make a new code</button>
+      <p class="small muted">Use this if a photo of the code gets shared. The old code stops working.</p>
+    </section>
+    <section class="panel">
+      <div class="spread" style="margin-bottom:.4rem"><h2>Who came today</h2>${anyPending?'<button class="btn ghost" data-approve="all">Approve all</button>':""}</div>
+      <table><thead><tr><th>Student</th><th>Hours</th><th>Status</th></tr></thead><tbody>${tr}</tbody></table>
+      <p class="small muted" style="margin-top:.6rem">Partners see only first name, last initial, and grade. Only someone who was actually there approves hours.</p>
+    </section>
+  </div>`;
+}
+
+function viewAdmin(){
+  const done=Object.values(S.done).reduce((a,b)=>a+b,0);
+  const approvedPartner=S.partnerRows.filter(r=>r.status==="approved").reduce((a,r)=>a+r.hours,0)-2.5;
+  const hours=S.baseHours+approvedPartner+(S.leader.status==="approved"?2.25:0);
+  const students=Object.values(S.classes).reduce((a,c)=>a+c.students,0);
+  const log=S.records.slice(0,6).map(r=>`<tr><td><strong>${r.title}</strong><br><span class="small muted">${r.cls}</span></td><td>${r.by}<br><span class="small muted">${r.when}</span></td><td>${r.count} of ${r.of}</td></tr>`).join("");
+  return `<div class="head"><div><h1>Maple Street School</h1><p class="sub">School admin view</p></div><button class="btn ghost" data-reset>Reset demo data</button></div>
+  <div class="stats">
+    <div class="stat panel"><div class="n">${students}</div><div class="l">Students in the demo classes</div></div>
+    <div class="stat panel"><div class="n">${S.weekMissions+done}</div><div class="l">Student missions confirmed this week</div></div>
+    <div class="stat panel"><div class="n">${hours}</div><div class="l">Verified volunteer hours</div></div>
+  </div>
+  <div class="grid cols-2" style="align-items:start">
+    <div class="grid">
+      <section class="panel"><h2 style="margin-bottom:.4rem">Proof log</h2><p class="small muted">Every confirmation is saved with who confirmed it and when. It can’t be edited afterward.</p><table><thead><tr><th>Mission</th><th>Confirmed by</th><th>Students</th></tr></thead><tbody>${log}</tbody></table></section>
+      <section class="panel"><h2 style="margin-bottom:.4rem">Class leaderboard</h2>${leaderboard()}</section>
+    </div>
+    <div class="grid">
+      <section class="panel law"><h2 style="margin-bottom:.4rem">Civics Project module</h2>
+        <p>Massachusetts requires every public school serving 8th grade and every high school to offer at least one student-led, non-partisan civics project for each student. This module walks a class through one in five steps.</p>
+        <p class="small muted" style="margin-top:.6rem">Grade 11 Advisory is on step ${S.done.g11?4:3} of 5.</p>
+        <div class="bar" style="margin-top:.5rem"><span style="width:${(S.done.g11?3:2)/5*100}%"></span></div>
+      </section>
+      <section class="panel"><h2 style="margin-bottom:.4rem">Also in the full app</h2>
+        <p class="small">Upload the student roster as a spreadsheet, invite teachers by email, print QR login cards for younger students, review photos of cleaned-up places, export verified hours for counselors, and print a parent notice letter.</p>
+      </section>
+    </div>
+  </div>`;
+}
+
+function render(){
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",String(t.dataset.view===(S.view==="run"?"teacher":S.view))));
+  const v={roadmap:viewRoadmap,teacher:viewTeacher,run:viewRun,town:viewTown,kid:viewKid,leader:viewLeader,partner:viewPartner,admin:viewAdmin}[S.view];
+  app.innerHTML=v();
+}
+function go(view){S.view=view;S.projector=false;if(view==="kid")S.kid=null;render();window.scrollTo({top:0})}
+
+function celebrate(n){
+  if(reduced){const d=document.createElement("div");d.className="static-cel";d.textContent=`Mission complete for ${n} students`;document.body.appendChild(d);setTimeout(()=>d.remove(),1800);return}
+  const o=document.getElementById("overlay");const colors=["#F5B700","#5BA4D9","#2F8F5B","#C8553D"];
+  for(let i=0;i<Math.min(n,28);i++){const b=document.createElement("div");b.className="balloon";b.style.left=(4+Math.random()*90)+"%";b.style.background=colors[i%4];b.style.animationDelay=(Math.random()*.9)+"s";o.appendChild(b);setTimeout(()=>b.remove(),3800)}
+}
+
+document.addEventListener("click",e=>{
+  const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.view){go(t.dataset.view);return}
+  if(t.dataset.go){go(t.dataset.go);return}
+  if(t.dataset.start){S.runClass=t.dataset.start;S.runStep=1;S.absent=new Set();S.view="run";render();window.scrollTo({top:0});return}
+  if(t.dataset.step){S.runStep=+t.dataset.step;render();return}
+  if(t.dataset.chip!==undefined){const i=+t.dataset.chip;S.absent.has(i)?S.absent.delete(i):S.absent.add(i);render();return}
+  if(t.hasAttribute("data-confirm")){
+    const id=S.runClass,c=S.classes[id],m=c.mission,n=c.students-S.absent.size;
+    c.points+=n*m.points;S.done[id]=n;
+    if(c.kids){c.kids.forEach((k,i)=>{if(!S.absent.has(i)){k.points+=m.points;k.stamps[m.quality]=(k.stamps[m.quality]||0)+1;k.fresh=m.quality;k.history.unshift({title:m.title,module:`${m.module}, day ${m.day}`,by:c.teacher,when:"today"})}})}
+    S.records.unshift({cls:c.name,title:m.title,by:c.teacher,when:nowLabel(),count:n,of:c.students,absent:[...S.absent].map(i=>c.roster[i]),proof:m.proof});
+    const idx=c.town.length;if(idx<36)c.town.push(m.item);
+    S.lastAdded={cls:id,idx};S.townClass=id;
+    celebrate(n);
+    setTimeout(()=>{S.view="town";render();window.scrollTo({top:0});toast(`Confirmed for ${n} students. Each got ${m.points} points and a ${m.quality} stamp, and the class got a ${ITEM_NAMES[m.item]}.`)},reduced?900:2700);
+    return;
+  }
+  if(t.dataset.kid!==undefined){S.kid=t.dataset.kid==="none"?null:+t.dataset.kid;render();window.scrollTo({top:0});return}
+  if(t.dataset.level){S.road={level:t.dataset.level,m:0,d:0};render();return}
+  if(t.dataset.road){const [a,b]=t.dataset.road.split(",").map(Number);S.road.m=a;S.road.d=b;render();return}
+  if(t.dataset.town){S.townClass=t.dataset.town;render();return}
+  if(t.dataset.projector){S.projector=t.dataset.projector==="on";render();return}
+  if(t.dataset.scan){
+    const out=t.dataset.scan==="out";S.leader.was=S.leader.status;S.leader.status="scanning";render();
+    setTimeout(()=>{if(out){S.leader.status="pending";S.leader.pending=2.25;toast("Checked out. Your hours are waiting for approval.")}else{S.leader.status="in";toast("Checked in to Saturday food sort.")}render()},1400);
+    return;
+  }
+  if(t.dataset.approve){
+    const a=t.dataset.approve;
+    if(a==="all"){S.partnerRows.forEach(r=>{if(r.status==="pending")r.status="approved"});if(S.leader.status==="pending")approveMe();toast("All pending hours approved.")}
+    else if(a==="me"){approveMe();toast("Approved 2.25 hours for Jordan M.")}
+    else{S.partnerRows[+a].status="approved";toast(`Approved ${S.partnerRows[+a].hours} hours for ${S.partnerRows[+a].name}.`)}
+    render();return;
+  }
+  if(t.hasAttribute("data-regen")){S.qrSeed+=13;render();toast("New code ready. The old code no longer works.");return}
+  if(t.hasAttribute("data-cert")){openCert();return}
+  if(t.hasAttribute("data-close-cert")){document.getElementById("cert").close();return}
+  if(t.hasAttribute("data-reset")){S=freshState();S.view="admin";render();toast("Demo data reset.");return}
+});
+function approveMe(){
+  S.leader.status="approved";S.leader.verified=+(S.leader.verified+2.25).toFixed(2);S.leader.pending=0;
+  S.records.unshift({cls:"Grade 11 Advisory",title:"Saturday food sort, Jordan M.",by:"Dana K., Greater Community Food Bank",when:nowLabel(),count:1,of:1,absent:[],proof:"QR check-in 10:02 AM and check-out 12:17 PM, 2.25 hours approved"});
+}
+function openCert(){
+  const d=document.getElementById("cert");
+  d.innerHTML=`<div class="cert"><p class="small muted">Maple Street School</p><h1>Certificate of service</h1><p>This certifies that</p><p class="display" style="font-size:1.6rem">Jordan M.</p><p>completed <strong>${S.leader.verified} verified hours</strong> of community service, each approved by the partner organization where it took place.</p><p class="small muted">Verified through CivicQuest. Demo certificate.</p><button class="btn primary" data-close-cert>Close</button></div>`;
+  d.showModal();
+}
+const start=(location.hash||"").replace("#","");
+if(["roadmap","teacher","town","kid","leader","partner","admin"].includes(start))S.view=start;
+render();
+</script>
+</body>
+</html>

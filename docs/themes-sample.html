@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CivicQuest themes sample</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Lexend:wght@400;600&family=Overpass:wght@700;800&family=Public+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --page:#F6F7F8; --surface:#FFFFFF; --ink:#111827; --muted:#5B6472; --line:#E3E6EA; --accent:#00704A; --accent-soft:#E3F2EC; --yellow:#FFD23F;
+  --kid-bg:#FFFFFF; --kid-dot:#E7E7F0; --kid-ink:#22223B; --kid-muted:#5B5B78; --kid-surface:#FFFFFF;
+  --hero-1:#E63946; --hero-2:#1D3557; --hero-3:#FFD166;
+  --gum-1:#FF5FA2; --gum-2:#8B5CF6; --gum-3:#FFD6E8;
+  --sea-1:#0EA5E9; --sea-2:#14B8A6; --sea-3:#CFFAFE;
+  --cls-1:#2F8F5B; --cls-2:#1D2B4F; --cls-3:#F5B700;
+  --on-dark:#FFFFFF; --on-light:#22223B;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --page:#0F1115; --surface:#181B21; --ink:#F2F4F7; --muted:#A3AAB5; --line:#2A2F38; --accent:#2FA176; --accent-soft:#16302A;
+    --kid-bg:#1A1A2E; --kid-dot:#2B2B46; --kid-ink:#F4F4FA; --kid-muted:#B9B9D0; --kid-surface:#24243E;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --page:#0F1115; --surface:#181B21; --ink:#F2F4F7; --muted:#A3AAB5; --line:#2A2F38; --accent:#2FA176; --accent-soft:#16302A;
+  --kid-bg:#1A1A2E; --kid-dot:#2B2B46; --kid-ink:#F4F4FA; --kid-muted:#B9B9D0; --kid-surface:#24243E;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--page);color:var(--ink);font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding:2rem 1rem 3rem}
+h1{font-family:"Overpass",sans-serif;font-weight:800;font-size:clamp(1.7rem,4vw,2.4rem);margin:0 0 .3rem;line-height:1.1}
+.lede{color:var(--muted);margin:0 0 1.6rem;max-width:46rem}
+h2.sec{font-family:"Overpass",sans-serif;font-weight:800;font-size:1.3rem;margin:2rem 0 .3rem}
+.sec-note{color:var(--muted);margin:0 0 1rem;font-size:.95rem}
+
+/* kid skin */
+.kids{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.kid{--p:var(--cls-1);--s:var(--cls-2);--t:var(--cls-3);--on-p:var(--on-dark);
+  border:2.5px solid var(--kid-ink);border-radius:26px;overflow:hidden;background-color:var(--kid-bg);
+  background-image:radial-gradient(var(--kid-dot) 1.4px,transparent 1.4px);background-size:16px 16px;color:var(--kid-ink);font-family:"Lexend",sans-serif;box-shadow:6px 6px 0 var(--kid-ink)}
+.kid.hero{--p:var(--hero-1);--s:var(--hero-2);--t:var(--hero-3)}
+.kid.gum{--p:var(--gum-1);--s:var(--gum-2);--t:var(--gum-3)}
+.kid.sea{--p:var(--sea-1);--s:var(--sea-2);--t:var(--sea-3)}
+.kid-top{background:var(--p);color:var(--on-p);padding:1rem 1rem 1.3rem;border-bottom:2.5px solid var(--kid-ink);position:relative}
+.kid-top .th{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:.95rem;opacity:.95}
+.kid-top .who{display:flex;align-items:center;gap:.7rem;margin-top:.3rem}
+.ava{width:60px;height:60px;border-radius:50%;background:var(--kid-surface);border:3px solid var(--kid-ink);display:grid;place-items:center;font-size:2rem}
+.nm{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1.7rem;line-height:1}
+.pts{display:inline-block;margin-top:.25rem;background:var(--t);color:var(--on-light);border:2px solid var(--kid-ink);border-radius:999px;padding:.05rem .6rem;font-weight:600;font-size:.85rem}
+.kid-body{padding:1rem;display:flex;flex-direction:column;gap:.9rem}
+.box{background:var(--kid-surface);border:2.5px solid var(--kid-ink);border-radius:18px;padding:.8rem;box-shadow:4px 4px 0 var(--kid-ink)}
+.box h3{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1.15rem;margin:0 0 .5rem;line-height:1.1}
+.stickers{display:flex;gap:.55rem;flex-wrap:wrap}
+.stk{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;border:4px solid #fff;box-shadow:0 0 0 2.5px var(--kid-ink),2px 3px 0 2.5px var(--kid-ink);font-family:"Baloo 2",sans-serif;font-weight:800;font-size:.66rem;line-height:1;text-align:center;color:var(--on-light)}
+.stk.a{background:var(--t);transform:rotate(-8deg)}
+.stk.b{background:var(--p);color:var(--on-p);transform:rotate(6deg)}
+.stk.c{background:var(--s);color:var(--on-dark);transform:rotate(-3deg)}
+.stk.l{background:transparent;border:2.5px dashed var(--kid-muted);box-shadow:none;color:var(--kid-muted)}
+.next{font-size:.9rem;color:var(--kid-muted)}
+.next b{color:var(--kid-ink)}
+.mission{display:flex;align-items:center;justify-content:space-between;gap:.6rem}
+.mission .t{font-weight:600}
+.kbtn{background:var(--p);color:var(--on-p);border:2.5px solid var(--kid-ink);border-radius:999px;padding:.55rem 1rem;font:inherit;font-weight:600;box-shadow:3px 3px 0 var(--kid-ink);min-height:48px}
+.pick{display:flex;gap:.45rem;align-items:center;font-size:.85rem;color:var(--kid-muted)}
+.pick i{width:22px;height:22px;border-radius:50%;border:2.5px solid var(--kid-ink);display:inline-block}
+.pick i.on{outline:3px solid var(--kid-ink);outline-offset:2px}
+
+/* adult skin */
+.adult{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1.1rem}
+.panel h3{font-family:"Overpass",sans-serif;font-weight:800;font-size:1.15rem;margin:0 0 .7rem}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th,td{text-align:left;padding:.55rem .3rem;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-size:.82rem;font-weight:700}
+.tag{display:inline-block;font-size:.78rem;font-weight:700;padding:.1rem .5rem;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.abtn{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:.45rem .8rem;font:inherit;font-weight:700;min-height:40px}
+.line{position:relative;display:grid;grid-template-columns:repeat(5,1fr);padding-top:2px}
+.line::before{content:"";position:absolute;left:10%;right:10%;top:11px;height:4px;border-radius:2px;background:var(--line)}
+.stn{position:relative;display:flex;flex-direction:column;align-items:center;gap:.3rem;text-align:center;font-size:.78rem;line-height:1.2;color:var(--muted)}
+.stn b{color:var(--ink);font-family:"Overpass",sans-serif}
+.dot{width:22px;height:22px;border-radius:50%;background:var(--surface);border:4px solid var(--line)}
+.stn.on .dot{border-color:var(--yellow);background:var(--ink)}
+.foot{margin-top:2rem;color:var(--muted);font-size:.95rem;max-width:48rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>CivicQuest themes</h1>
+  <p class="lede">Kids get a playful sticker book look with four themes they choose themselves. Teachers, admins, partners, and counselors get a calm, plain look. Both share the same layout and components.</p>
+
+  <h2 class="sec">Student dashboard, sticker book look</h2>
+  <p class="sec-note">The same dashboard in each theme. Grades 2–8 open it by scanning their QR card on a class device. High schoolers can pick the Classic theme or a calm accent color.</p>
+  <div class="kids">
+    <article class="kid hero" aria-label="Hero theme">
+      <div class="kid-top"><div class="th">Hero</div><div class="who"><span class="ava" aria-hidden="true">🦁</span><div><div class="nm">Leo</div><span class="pts">138 points</span></div></div></div>
+      <div class="kid-body">
+        <div class="box"><h3>My sticker passport</h3><div class="stickers"><span class="stk a">Safety<br>×3</span><span class="stk b">Kind<br>×4</span><span class="stk c">Help<br>×2</span><span class="stk l">Civic</span></div></div>
+        <div class="box mission"><span><span class="next">Today</span><br><span class="t">Stop, look, listen</span></span><button class="kbtn" type="button">Open</button></div>
+        <p class="next"><b>Next badge:</b> Safety Star, two missions to go.</p>
+        <div class="pick" aria-hidden="true">Theme <i class="on" style="background:var(--hero-1)"></i><i style="background:var(--gum-1)"></i><i style="background:var(--sea-1)"></i><i style="background:var(--cls-1)"></i></div>
+      </div>
+    </article>
+    <article class="kid gum" aria-label="Bubblegum theme">
+      <div class="kid-top"><div class="th">Bubblegum</div><div class="who"><span class="ava" aria-hidden="true">🦄</span><div><div class="nm">Maya</div><span class="pts">142 points</span></div></div></div>
+      <div class="kid-body">
+        <div class="box"><h3>My sticker passport</h3><div class="stickers"><span class="stk a">Safety<br>×2</span><span class="stk b">Kind<br>×5</span><span class="stk c">Help<br>×3</span><span class="stk l">Civic</span></div></div>
+        <div class="box mission"><span><span class="next">Today</span><br><span class="t">Stop, look, listen</span></span><button class="kbtn" type="button">Open</button></div>
+        <p class="next"><b>Next badge:</b> Kindness Champion, five stamps to go.</p>
+        <div class="pick" aria-hidden="true">Theme <i style="background:var(--hero-1)"></i><i class="on" style="background:var(--gum-1)"></i><i style="background:var(--sea-1)"></i><i style="background:var(--cls-1)"></i></div>
+      </div>
+    </article>
+    <article class="kid sea" aria-label="Ocean theme">
+      <div class="kid-top"><div class="th">Ocean</div><div class="who"><span class="ava" aria-hidden="true">🐳</span><div><div class="nm">Kenji</div><span class="pts">126 points</span></div></div></div>
+      <div class="kid-body">
+        <div class="box"><h3>My sticker passport</h3><div class="stickers"><span class="stk a">Safety<br>×4</span><span class="stk b">Kind<br>×3</span><span class="stk c">Help<br>×1</span><span class="stk l">Civic</span></div></div>
+        <div class="box mission"><span><span class="next">Today</span><br><span class="t">Stop, look, listen</span></span><button class="kbtn" type="button">Open</button></div>
+        <p class="next"><b>Next badge:</b> Safety Star, one mission to go.</p>
+        <div class="pick" aria-hidden="true">Theme <i style="background:var(--hero-1)"></i><i style="background:var(--gum-1)"></i><i class="on" style="background:var(--sea-1)"></i><i style="background:var(--cls-1)"></i></div>
+      </div>
+    </article>
+    <article class="kid" aria-label="Classic theme">
+      <div class="kid-top"><div class="th">Classic</div><div class="who"><span class="ava" aria-hidden="true">🦊</span><div><div class="nm">Ava</div><span class="pts">131 points</span></div></div></div>
+      <div class="kid-body">
+        <div class="box"><h3>My sticker passport</h3><div class="stickers"><span class="stk a">Safety<br>×3</span><span class="stk b">Kind<br>×3</span><span class="stk c">Help<br>×2</span><span class="stk l">Civic</span></div></div>
+        <div class="box mission"><span><span class="next">Today</span><br><span class="t">Stop, look, listen</span></span><button class="kbtn" type="button">Open</button></div>
+        <p class="next"><b>Next badge:</b> Week Streak, finish all five Safe Streets days.</p>
+        <div class="pick" aria-hidden="true">Theme <i style="background:var(--hero-1)"></i><i style="background:var(--gum-1)"></i><i style="background:var(--sea-1)"></i><i class="on" style="background:var(--cls-1)"></i></div>
+      </div>
+    </article>
+  </div>
+
+  <h2 class="sec">Teacher and admin screens, calm look</h2>
+  <p class="sec-note">White, black, and gray with one green accent, plus dark mode. Built for speed: every daily action takes under two minutes.</p>
+  <div class="adult">
+    <section class="panel">
+      <h3>Today’s missions</h3>
+      <table>
+        <thead><tr><th>Class</th><th>Mission</th><th></th></tr></thead>
+        <tbody>
+          <tr><td><strong>Grade 3</strong><br><span style="color:var(--muted);font-size:.85rem">24 students</span></td><td>Stop, look, listen<br><span class="tag">Safety</span></td><td><button class="abtn" type="button">Start</button></td></tr>
+          <tr><td><strong>Grade 7</strong><br><span style="color:var(--muted);font-size:.85rem">22 students</span></td><td>Thank a community worker<br><span class="tag">Respect</span></td><td><button class="abtn" type="button">Start</button></td></tr>
+          <tr><td><strong>Grade 11</strong><br><span style="color:var(--muted);font-size:.85rem">20 students</span></td><td>Make a plan<br><span class="tag">Civic action</span></td><td><span style="color:var(--accent);font-weight:700">Done</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="panel">
+      <h3>Week 1: Safe Streets</h3>
+      <div class="line" aria-label="This week">
+        <div class="stn on"><span class="dot"></span><b>Mon</b>Stop, look, listen</div>
+        <div class="stn"><span class="dot"></span><b>Tue</b>Signals</div>
+        <div class="stn"><span class="dot"></span><b>Wed</b>Be seen</div>
+        <div class="stn"><span class="dot"></span><b>Thu</b>Bus safety</div>
+        <div class="stn"><span class="dot"></span><b>Fri</b>Safe route</div>
+      </div>
+      <p style="color:var(--muted);font-size:.9rem;margin:1rem 0 0">Screens shown to the class on the projector, like Pip’s story and the class town, switch to the sticker book look.</p>
+    </section>
+  </div>
+  <p class="foot">All four kid themes are original. They don’t use any copyrighted characters or brands, which keeps the app and your demo video within the hackathon rules.</p>
+</div>
+</body>
+</html>

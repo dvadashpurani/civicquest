@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CivicQuest design directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Baloo+2:wght@600;800&family=Fredoka:wght@500;600&family=Lexend:wght@400;600&family=Overpass:wght@600;800&family=Public+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --page:#F3F4F2; --panel:#FFFFFF; --text:#1E2328; --muted:#5A626B; --rule:#D9DDDA;
+  --a-bg:#EEF3F1; --a-surface:#FFFFFF; --a-ink:#1D2B4F; --a-muted:#55617B; --a-line:#D3DDD9; --a-green:#2F8F5B; --a-yellow:#F5B700; --a-soft:#DCEFE3; --a-town:#CFE6D6;
+  --b-bg:#FFFFFF; --b-surface:#FFFFFF; --b-ink:#22223B; --b-muted:#5B5B78; --b-dot:#E4E4EE; --b-red:#FF5A4E; --b-sun:#FFC93C; --b-sky:#3DA5FF; --b-grass:#2DB67C;
+  --c-bg:#F2F4F3; --c-surface:#FFFFFF; --c-ink:#1E2328; --c-muted:#59616A; --c-line:#D5DAD8; --c-green:#00704A; --c-blue:#1F4E9C; --c-yellow:#FFD23F; --c-red:#C8102E; --c-on-sign:#FFFFFF;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --page:#111417; --panel:#1A1F24; --text:#EEF1F3; --muted:#A5ADB6; --rule:#2C333A;
+    --a-bg:#121A30; --a-surface:#1B2542; --a-ink:#E8EEF6; --a-muted:#A6B1C8; --a-line:#2C3A5E; --a-green:#4FB57E; --a-soft:#1F3B33; --a-town:#1F3B33;
+    --b-bg:#1A1A2E; --b-surface:#24243E; --b-ink:#F4F4FA; --b-muted:#B4B4CC; --b-dot:#2E2E4A;
+    --c-bg:#121518; --c-surface:#1C2126; --c-ink:#EEF1F3; --c-muted:#A3ABB3; --c-line:#323A42; --c-green:#1F8A5E; --c-blue:#3A6BC0;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --page:#111417; --panel:#1A1F24; --text:#EEF1F3; --muted:#A5ADB6; --rule:#2C333A;
+  --a-bg:#121A30; --a-surface:#1B2542; --a-ink:#E8EEF6; --a-muted:#A6B1C8; --a-line:#2C3A5E; --a-green:#4FB57E; --a-soft:#1F3B33; --a-town:#1F3B33;
+  --b-bg:#1A1A2E; --b-surface:#24243E; --b-ink:#F4F4FA; --b-muted:#B4B4CC; --b-dot:#2E2E4A;
+  --c-bg:#121518; --c-surface:#1C2126; --c-ink:#EEF1F3; --c-muted:#A3ABB3; --c-line:#323A42; --c-green:#1F8A5E; --c-blue:#3A6BC0;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--page);color:var(--text);font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+.wrap{max-width:1160px;margin:0 auto;padding:2rem 1rem 3rem}
+.intro h1{font-family:"Overpass",system-ui,sans-serif;font-weight:800;font-size:clamp(1.8rem,4vw,2.6rem);margin:0 0 .4rem;line-height:1.1}
+.intro p{margin:0;color:var(--muted);max-width:44rem}
+.dirs{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));margin-top:1.75rem}
+.dir{background:var(--panel);border:1px solid var(--rule);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.dir-head{padding:1.1rem 1.1rem .4rem}
+.dir-head h2{margin:0;font-family:"Overpass",sans-serif;font-weight:800;font-size:1.35rem}
+.dir-head p{margin:.25rem 0 0;color:var(--muted);font-size:.95rem}
+.swatches{display:flex;gap:.35rem;padding:.6rem 1.1rem}
+.sw{width:30px;height:30px;border-radius:8px;border:1px solid var(--rule)}
+.stage{margin:.4rem .8rem .8rem;border-radius:14px;padding:1rem;display:flex;flex-direction:column;gap:.9rem;flex:1}
+.why{padding:0 1.1rem 1.1rem;font-size:.93rem;color:var(--muted)}
+.why strong{color:var(--text)}
+.rec{display:inline-block;font-size:.8rem;font-weight:700;padding:.15rem .6rem;border-radius:999px;background:var(--c-yellow);color:#1E2328;margin-left:.4rem;vertical-align:middle}
+
+/* ---------- A: neighborhood map ---------- */
+.A .stage{background:var(--a-bg);color:var(--a-ink);font-family:"Atkinson Hyperlegible",sans-serif}
+.A .card{background:var(--a-surface);border:1px solid var(--a-line);border-radius:16px;padding:.9rem}
+.A .k{color:var(--a-muted);font-size:.85rem}
+.A h3{font-family:"Fredoka",sans-serif;font-weight:600;font-size:1.35rem;margin:.1rem 0 .5rem}
+.A .btn{background:var(--a-yellow);color:#1D2B4F;border:0;border-radius:12px;padding:.6rem 1rem;font-weight:700;font:inherit;font-weight:700}
+.A .week{display:grid;grid-template-columns:repeat(5,1fr);gap:.35rem}
+.A .wd{background:var(--a-surface);border:1px solid var(--a-line);border-radius:10px;padding:.4rem;font-size:.78rem;min-height:54px}
+.A .wd.on{border:2px solid var(--a-green);background:var(--a-soft)}
+.A .town{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.A .t{aspect-ratio:1;border-radius:7px;background:var(--a-town);display:grid;place-items:center}
+.A .t.e{background:transparent;border:2px dashed var(--a-line)}
+.A .t svg{width:76%}
+
+/* ---------- B: sticker book ---------- */
+.B .stage{background-color:var(--b-bg);background-image:radial-gradient(var(--b-dot) 1.4px,transparent 1.4px);background-size:16px 16px;color:var(--b-ink);font-family:"Lexend",sans-serif}
+.B .card{background:var(--b-surface);border:2.5px solid var(--b-ink);border-radius:18px;padding:.9rem;box-shadow:5px 5px 0 var(--b-ink)}
+.B .k{color:var(--b-muted);font-size:.85rem}
+.B h3{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1.55rem;margin:0 0 .4rem;line-height:1.1}
+.B .btn{background:var(--b-red);color:#fff;border:2.5px solid var(--b-ink);border-radius:999px;padding:.55rem 1.1rem;font:inherit;font-weight:600;box-shadow:3px 3px 0 var(--b-ink)}
+.B .week{display:grid;grid-template-columns:repeat(5,1fr);gap:.4rem}
+.B .wd{background:var(--b-surface);border:2px solid var(--b-ink);border-radius:12px;padding:.4rem;font-size:.76rem;min-height:54px}
+.B .wd.on{background:var(--b-sun);color:#22223B}
+.B .stickers{display:flex;gap:.7rem;flex-wrap:wrap}
+.B .stk{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;border:5px solid #fff;box-shadow:0 0 0 2.5px var(--b-ink),3px 4px 0 2.5px var(--b-ink);font-family:"Baloo 2",sans-serif;font-weight:800;font-size:.78rem;text-align:center;line-height:1;color:#22223B}
+.B .stk:nth-child(1){background:var(--b-sun);transform:rotate(-8deg)}
+.B .stk:nth-child(2){background:var(--b-sky);transform:rotate(5deg)}
+.B .stk:nth-child(3){background:var(--b-grass);transform:rotate(-3deg)}
+.B .stk.locked{background:transparent;border-style:dashed;border-color:var(--b-muted);box-shadow:none;color:var(--b-muted)}
+
+/* ---------- C: street signs ---------- */
+.C .stage{background:var(--c-bg);color:var(--c-ink);font-family:"Public Sans",sans-serif}
+.C .sign{background:var(--c-green);color:var(--c-on-sign);border-radius:10px;padding:5px}
+.C .sign-in{border:2.5px solid #fff;border-radius:7px;padding:.75rem .85rem}
+.C .sign .k{font-family:"Overpass",sans-serif;font-weight:600;font-size:.9rem;opacity:.92}
+.C h3{font-family:"Overpass",sans-serif;font-weight:800;font-size:1.6rem;margin:.1rem 0 .55rem;line-height:1.05}
+.C .btn{background:var(--c-yellow);color:#1E2328;border:0;border-radius:6px;padding:.6rem 1rem;font-family:"Overpass",sans-serif;font-weight:800;font-size:1rem}
+.C .line{position:relative;display:grid;grid-template-columns:repeat(5,1fr);padding-top:4px}
+.C .line::before{content:"";position:absolute;left:10%;right:10%;top:15px;height:6px;border-radius:3px;background:var(--c-blue)}
+.C .stn{position:relative;display:flex;flex-direction:column;align-items:center;gap:.3rem;text-align:center;font-size:.74rem;line-height:1.2}
+.C .dot{width:28px;height:28px;border-radius:50%;background:var(--c-surface);border:5px solid var(--c-blue)}
+.C .stn.done .dot{background:var(--c-blue)}
+.C .stn.on .dot{border-color:var(--c-yellow);background:var(--c-ink);width:32px;height:32px;margin-top:-2px}
+.C .stn b{font-family:"Overpass",sans-serif}
+.C .pass{display:flex;gap:.6rem;flex-wrap:wrap}
+.C .badge{display:grid;place-items:center;width:64px;height:64px;font-family:"Overpass",sans-serif;font-weight:800;font-size:.7rem;text-align:center;line-height:1.05;color:#fff}
+.C .badge.oct{background:var(--c-red);clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)}
+.C .badge.dia{background:var(--c-yellow);color:#1E2328;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.C .badge.rect{background:var(--c-blue);border-radius:8px;border:3px solid #fff;outline:2px solid var(--c-blue)}
+.C .badge.locked{background:transparent;color:var(--c-muted);border:2.5px dashed var(--c-line);border-radius:10px}
+
+.foot{margin-top:2rem;color:var(--muted);font-size:.95rem;max-width:50rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="intro">
+    <h1>Three looks for CivicQuest</h1>
+    <p>Each direction shows the same three things: a teacher’s mission card, the week’s roadmap, and what a student collects. Pick one, and it goes into the design steering file for Kiro.</p>
+  </header>
+
+  <div class="dirs">
+    <!-- A -->
+    <article class="dir A">
+      <div class="dir-head"><h2>A. Neighborhood map</h2><p>Calm map colors, with the class town as the hero. This is what the simulation uses now.</p></div>
+      <div class="swatches" aria-hidden="true"><span class="sw" style="background:var(--a-bg)"></span><span class="sw" style="background:var(--a-ink)"></span><span class="sw" style="background:var(--a-green)"></span><span class="sw" style="background:var(--a-yellow)"></span><span class="sw" style="background:#5BA4D9"></span></div>
+      <div class="stage">
+        <div class="card"><div class="k">Grade 3, Safe Streets, day 1</div><h3>Stop, look, listen</h3><button class="btn" type="button">Start mission</button></div>
+        <div class="week" aria-label="This week">
+          <div class="wd on"><b>Mon</b><br>Stop, look, listen</div><div class="wd"><b>Tue</b><br>Signals</div><div class="wd"><b>Wed</b><br>Be seen</div><div class="wd"><b>Thu</b><br>Bus safety</div><div class="wd"><b>Fri</b><br>Safe route</div>
+        </div>
+        <div class="card"><div class="k">Class town, 18 of 36</div>
+          <div class="town" aria-hidden="true">
+            <div class="t"><svg viewBox="0 0 40 40"><rect x="18" y="24" width="4" height="10" fill="#8A6A4A"/><circle cx="20" cy="18" r="10" fill="#2F8F5B"/></svg></div>
+            <div class="t"><svg viewBox="0 0 40 40"><rect x="2" y="8" width="36" height="24" fill="#6B7480"/><rect x="6" y="11" width="4" height="18" fill="#fff"/><rect x="13" y="11" width="4" height="18" fill="#fff"/><rect x="20" y="11" width="4" height="18" fill="#fff"/><rect x="27" y="11" width="4" height="18" fill="#fff"/></svg></div>
+            <div class="t"><svg viewBox="0 0 40 40"><rect x="8" y="16" width="24" height="19" fill="#F5B700"/><polygon points="6,17 20,9 34,17" fill="#C8553D"/><rect x="17" y="26" width="6" height="9" fill="#1D2B4F"/></svg></div>
+            <div class="t"><svg viewBox="0 0 40 40"><rect x="7" y="12" width="26" height="23" rx="2" fill="#fff"/><rect x="18" y="16" width="4" height="12" fill="#C8553D"/><rect x="14" y="20" width="12" height="4" fill="#C8553D"/></svg></div>
+            <div class="t e"></div><div class="t e"></div>
+          </div>
+        </div>
+      </div>
+      <p class="why"><strong>Best for:</strong> a calm, trustworthy feel that teachers and principals take seriously. <strong>Risk:</strong> the least surprising of the three, so it relies on the town to stand out.</p>
+    </article>
+
+    <!-- B -->
+    <article class="dir B">
+      <div class="dir-head"><h2>B. Sticker book</h2><p>Thick outlines, bold colors, and stamps that look like real stickers. Made for kids first.</p></div>
+      <div class="swatches" aria-hidden="true"><span class="sw" style="background:var(--b-ink)"></span><span class="sw" style="background:var(--b-red)"></span><span class="sw" style="background:var(--b-sun)"></span><span class="sw" style="background:var(--b-sky)"></span><span class="sw" style="background:var(--b-grass)"></span></div>
+      <div class="stage">
+        <div class="card"><div class="k">Grade 3, Safe Streets, day 1</div><h3>Stop, look, listen</h3><button class="btn" type="button">Start mission</button></div>
+        <div class="week" aria-label="This week">
+          <div class="wd on"><b>Mon</b><br>Stop, look, listen</div><div class="wd"><b>Tue</b><br>Signals</div><div class="wd"><b>Wed</b><br>Be seen</div><div class="wd"><b>Thu</b><br>Bus safety</div><div class="wd"><b>Fri</b><br>Safe route</div>
+        </div>
+        <div class="card"><div class="k">My sticker passport</div>
+          <div class="stickers" style="margin-top:.6rem"><span class="stk">Safety<br>×3</span><span class="stk">Kindness<br>×4</span><span class="stk">Helping<br>×2</span><span class="stk locked">Civic<br>action</span></div>
+        </div>
+      </div>
+      <p class="why"><strong>Best for:</strong> making grades 2–5 excited, and it photographs well in a demo video. <strong>Risk:</strong> high schoolers and principals may find it too young.</p>
+    </article>
+
+    <!-- C -->
+    <article class="dir C">
+      <div class="dir-head"><h2>C. Street signs <span class="rec">My pick</span></h2><p>Built from the language of real streets: sign panels, highway lettering, and a roadmap drawn as a transit line.</p></div>
+      <div class="swatches" aria-hidden="true"><span class="sw" style="background:var(--c-green)"></span><span class="sw" style="background:var(--c-blue)"></span><span class="sw" style="background:var(--c-yellow)"></span><span class="sw" style="background:var(--c-red)"></span><span class="sw" style="background:var(--c-ink)"></span></div>
+      <div class="stage">
+        <div class="sign"><div class="sign-in"><div class="k">Grade 3, Safe Streets, day 1</div><h3>Stop, look, listen</h3><button class="btn" type="button">Start mission</button></div></div>
+        <div class="line" aria-label="This week">
+          <div class="stn on"><span class="dot"></span><b>Mon</b>Stop, look, listen</div>
+          <div class="stn"><span class="dot"></span><b>Tue</b>Signals</div>
+          <div class="stn"><span class="dot"></span><b>Wed</b>Be seen</div>
+          <div class="stn"><span class="dot"></span><b>Thu</b>Bus safety</div>
+          <div class="stn"><span class="dot"></span><b>Fri</b>Safe route</div>
+        </div>
+        <div>
+          <div style="font-family:Overpass,sans-serif;font-weight:800;margin-bottom:.5rem">My badges</div>
+          <div class="pass"><span class="badge oct">Safety<br>×3</span><span class="badge dia">Kindness<br>×4</span><span class="badge rect">Helping<br>×2</span><span class="badge locked">Civic<br>action</span></div>
+        </div>
+      </div>
+      <p class="why"><strong>Best for:</strong> a look nobody else will have, tied directly to the civic theme. Every kid already knows these shapes from walking to school, so the badges teach real sign meanings too. Overpass is based on US highway sign lettering, and Public Sans was made for government websites. <strong>Risk:</strong> needs restraint so it doesn’t feel like a traffic manual.</p>
+    </article>
+  </div>
+
+  <p class="foot">Whichever you pick, the class town stays the memorable element, every screen works in light and dark mode, and text stays large and readable for young students.</p>
+</div>
+</body>
+</html>

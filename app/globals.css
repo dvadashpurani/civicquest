@@ -1,0 +1,354 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/*
+ * CivicQuest design system: one component set, two skins (.kiro/steering/design.md).
+ *
+ *   data-skin="calm" | "sticker"                       set on a layout wrapper (SkinWrapper)
+ *   data-kid-theme="hero" | "bubblegum" | "ocean" | "classic"
+ *   data-theme="light" | "dark" on <html>              optional manual override of the OS setting
+ *
+ * Raw design tokens (--bg, --surface, --ink, --muted, --line, --accent, ...) carry the exact
+ * values from the steering doc. shadcn's variables (--background, --primary, ...) are mapped
+ * onto those tokens so shadcn components follow the active skin.
+ *
+ * Name collisions: the design system owns --muted (a text colour) and --accent (the brand
+ * green), while shadcn uses "muted" and "accent" as soft background fills. The Tailwind
+ * `muted` and `accent` colours therefore read --surface-muted and --surface-accent instead.
+ */
+
+/* `dark:` follows the OS setting unless data-theme overrides it, and never applies inside
+   the sticker skin, because kid screens are always light. */
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]) *):not(
+        :where([data-skin="sticker"], [data-skin="sticker"] *)
+      ) {
+      @slot;
+    }
+  }
+  &:where([data-theme="dark"] *):not(
+      :where([data-skin="sticker"], [data-skin="sticker"] *)
+    ) {
+    @slot;
+  }
+}
+
+@theme inline {
+  /* Fonts: the active skin decides what "sans" and "heading" mean. */
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-display);
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+
+  /* Calm skin tokens as Tailwind colours (bg-page, text-ink, border-line, bg-brand, ...). */
+  --color-page: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-subtle: var(--muted);
+  --color-line: var(--line);
+  --color-brand: var(--accent);
+  --color-brand-soft: var(--accent-soft);
+  --color-on-brand: var(--on-accent);
+  --color-today: var(--today);
+  --color-danger: var(--danger);
+
+  /* Sticker skin tokens (bg-kid-bg, text-kid-ink, bg-kid-primary, ...). */
+  --color-kid-bg: var(--kid-bg);
+  --color-kid-dot: var(--kid-dot);
+  --color-kid-surface: var(--kid-surface);
+  --color-kid-soft: var(--kid-soft);
+  --color-kid-ink: var(--kid-ink);
+  --color-kid-muted: var(--kid-muted);
+  --color-kid-primary: var(--kid-primary);
+  --color-kid-secondary: var(--kid-secondary);
+  --color-kid-highlight: var(--kid-highlight);
+  --color-kid-on-primary: var(--kid-on-primary);
+  --color-kid-on-secondary: var(--kid-on-secondary);
+  --color-kid-on-highlight: var(--kid-on-highlight);
+
+  /* Sticker shapes: solid offset shadows (no blur) and 18-26px corners. */
+  --shadow-sticker-sm: 4px 4px 0 0 var(--kid-ink);
+  --shadow-sticker: 6px 6px 0 0 var(--kid-ink);
+  --radius-sticker: 18px;
+  --radius-sticker-lg: 26px;
+
+  /* shadcn colour mapping. */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--surface-accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--surface-muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ---------------------------------------------------------------------------
+ * Raw tokens, light values
+ * ------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  /* Calm skin */
+  --bg: #F6F7F8;
+  --surface: #FFFFFF;
+  --ink: #111827;
+  --muted: #5B6472;
+  --line: #E3E6EA;
+  --accent: #00704A;
+  --accent-soft: #E3F2EC;
+  --today: #FFD23F;
+  --danger: #C8102E;
+  --on-accent: #FFFFFF;
+
+  /* Sticker skin: kid screens are always light, so these have no dark values. */
+  --kid-bg: #EEFAF8;
+  --kid-dot: #D3EFEA;
+  --kid-surface: #FFFFFF;
+  --kid-soft: #E0F5F2;
+  --kid-ink: #22223B;
+  --kid-muted: #5B5B78;
+  --kid-danger: #C8102E;
+
+  /* Kid theme: Classic is the default. */
+  --kid-primary: #2F8F5B;
+  --kid-secondary: #1D2B4F;
+  --kid-highlight: #F5B700;
+  --kid-on-primary: #FFFFFF;
+  --kid-on-secondary: #FFFFFF;
+  --kid-on-highlight: #22223B;
+
+  /* Font stacks (the --font-<family> variables come from next/font in app/layout.tsx). */
+  --font-calm-body: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-calm-display: var(--font-overpass), ui-sans-serif, system-ui, sans-serif;
+  --font-kid-body: var(--font-lexend), ui-sans-serif, system-ui, sans-serif;
+  --font-kid-display: var(--font-baloo), ui-rounded, ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ---------------------------------------------------------------------------
+ * Raw tokens, dark values (OS dark mode unless forced light, or forced dark)
+ * ------------------------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0F1115;
+    --surface: #181B21;
+    --ink: #F2F4F7;
+    --muted: #A3AAB5;
+    --line: #2A2F38;
+    --accent: #2FA176;
+    --accent-soft: #16302A;
+    --today: #FFD23F;
+    --danger: #E0445F;
+    --on-accent: #0F1115;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0F1115;
+  --surface: #181B21;
+  --ink: #F2F4F7;
+  --muted: #A3AAB5;
+  --line: #2A2F38;
+  --accent: #2FA176;
+  --accent-soft: #16302A;
+  --today: #FFD23F;
+  --danger: #E0445F;
+  --on-accent: #0F1115;
+}
+
+/* ---------------------------------------------------------------------------
+ * Kid themes. Text on primary and secondary is white; text on highlight is #22223B.
+ * ------------------------------------------------------------------------- */
+[data-kid-theme="hero"] {
+  --kid-primary: #E63946;
+  --kid-secondary: #1D3557;
+  --kid-highlight: #FFD166;
+}
+
+[data-kid-theme="bubblegum"] {
+  --kid-primary: #FF5FA2;
+  --kid-secondary: #8B5CF6;
+  --kid-highlight: #FFD6E8;
+}
+
+[data-kid-theme="ocean"] {
+  --kid-primary: #0EA5E9;
+  --kid-secondary: #14B8A6;
+  --kid-highlight: #CFFAFE;
+}
+
+[data-kid-theme="classic"] {
+  --kid-primary: #2F8F5B;
+  --kid-secondary: #1D2B4F;
+  --kid-highlight: #F5B700;
+}
+
+/* ---------------------------------------------------------------------------
+ * Calm skin: the default. shadcn variables follow the calm tokens.
+ * ------------------------------------------------------------------------- */
+:root,
+[data-skin="calm"] {
+  --font-body: var(--font-calm-body);
+  --font-display: var(--font-calm-display);
+  --radius: 0.625rem; /* 10px, inside the 8-12px calm range */
+
+  --background: var(--bg);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--accent);
+  --primary-foreground: var(--on-accent);
+  --secondary: var(--accent-soft);
+  --secondary-foreground: var(--ink);
+  --surface-muted: var(--bg);
+  --muted-foreground: var(--muted);
+  --surface-accent: var(--accent-soft);
+  --accent-foreground: var(--ink);
+  --destructive: var(--danger);
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--accent);
+  --chart-1: var(--accent);
+  --chart-2: var(--today);
+  --chart-3: var(--muted);
+  --chart-4: var(--danger);
+  --chart-5: var(--ink);
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--accent);
+  --sidebar-primary-foreground: var(--on-accent);
+  --sidebar-accent: var(--accent-soft);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--accent);
+}
+
+/* ---------------------------------------------------------------------------
+ * Sticker book skin: kid tokens only, always light. Re-declared on nested
+ * data-kid-theme elements so a theme set below the wrapper still applies.
+ * ------------------------------------------------------------------------- */
+[data-skin="sticker"],
+[data-skin="sticker"] [data-kid-theme] {
+  color-scheme: light;
+  --font-body: var(--font-kid-body);
+  --font-display: var(--font-kid-display);
+  --radius: 1.125rem; /* 18px */
+
+  --background: var(--kid-bg);
+  --foreground: var(--kid-ink);
+  --card: var(--kid-surface);
+  --card-foreground: var(--kid-ink);
+  --popover: var(--kid-surface);
+  --popover-foreground: var(--kid-ink);
+  --primary: var(--kid-primary);
+  --primary-foreground: var(--kid-on-primary);
+  --secondary: var(--kid-secondary);
+  --secondary-foreground: var(--kid-on-secondary);
+  --surface-muted: var(--kid-soft);
+  --muted-foreground: var(--kid-muted);
+  --surface-accent: var(--kid-highlight);
+  --accent-foreground: var(--kid-on-highlight);
+  --destructive: var(--kid-danger);
+  --border: var(--kid-ink);
+  --input: var(--kid-ink);
+  --ring: var(--kid-ink);
+  --chart-1: var(--kid-primary);
+  --chart-2: var(--kid-secondary);
+  --chart-3: var(--kid-highlight);
+  --chart-4: var(--kid-muted);
+  --chart-5: var(--kid-ink);
+}
+
+/* 2.5px ink outline used by sticker cards, pills, and stamps. */
+@utility sticker-outline {
+  border: 2.5px solid var(--kid-ink);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-size: 1rem; /* calm body text is at least 16px */
+    line-height: 1.5;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+  h1,
+  h2 {
+    font-weight: 800;
+  }
+  button {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  [data-skin="calm"] {
+    font-family: var(--font-body);
+    color: var(--foreground);
+  }
+
+  [data-skin="sticker"] {
+    font-family: var(--font-body);
+    font-size: 1.125rem; /* kid text is at least 18px */
+    color: var(--kid-ink);
+    background-color: var(--kid-bg);
+    background-image: radial-gradient(var(--kid-dot) 1.4px, transparent 1.4px);
+    background-size: 16px 16px;
+  }
+  [data-skin="sticker"] :is(h1, h2, h3, h4, h5, h6) {
+    font-weight: 800;
+  }
+  [data-skin="sticker"] button {
+    font-family: var(--font-body);
+    font-weight: 600;
+  }
+}

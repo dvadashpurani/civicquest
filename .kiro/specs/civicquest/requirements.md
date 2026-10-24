@@ -93,7 +93,7 @@ This application stores data about children. Every security and privacy requirem
 4. WHEN a user with the admin role writes to classes, students, rewards, or profiles, THE CivicQuest_System SHALL permit the write only for rows whose school matches the user's own `school_id`.
 5. WHEN a user with the teacher role reads or writes classes, those classes' students, rewards, class modules, or completions, THE CivicQuest_System SHALL permit the operation only for rows belonging to classes the user owns.
 6. WHEN a user with the partner role reads or writes opportunities or check-ins, THE CivicQuest_System SHALL permit the operation only for rows belonging to the user's own organization.
-7. WHEN a user with the partner role reads student data for a check-in, THE CivicQuest_System SHALL expose only the first name, last initial, and grade of students who checked in, and no other student fields.
+7. THE CivicQuest_System SHALL expose check-in student details to partners only through a dedicated view or function that returns exactly the first name, last initial, and grade of students who checked in to the partner's own organization's opportunities, and SHALL NOT grant partners column access to any other student field.
 8. WHEN a user with the Leader role reads data, THE CivicQuest_System SHALL return only that user's own student row, completions, stamps, check-ins, and badges, plus opportunities from partners linked to the user's own school.
 9. WHEN any signed-in user reads modules or missions whose `school_id` is null, THE CivicQuest_System SHALL return those rows regardless of the user's school.
 10. IF a user attempts to read data belonging to a school other than the user's own, THEN THE CivicQuest_System SHALL return zero rows for that data.
@@ -271,10 +271,11 @@ This application stores data about children. Every security and privacy requirem
 
 1. WHILE Demo_Mode is enabled, THE CivicQuest_System SHALL provide a seed script `scripts/seed.ts` executed with the Service_Role_Key via `npm run seed`.
 2. IF the Service_Role_Key is absent when `npm run seed` runs, THEN THE CivicQuest_System SHALL exit with a non-zero status and emit an error indicating the key is required, seeding no data.
-3. WHEN the seed script runs, THE CivicQuest_System SHALL create exactly one school named Maple Street School and exactly five classes: Grade 3 (Ms. Rivera, 24 students, on Safe Streets day 1), Grade 7 (Mr. Chen, 22 students, on Respect Everywhere day 2), Grade 11 Advisory (Ms. Okafor, 20 students each with a Leader login, on Civics Project day 3), plus a Grade 4 class and a Grade 10 class.
-4. THE CivicQuest_System SHALL store for each seeded student only the first name, a single-character last initial, grade, class, and avatar, and no other personally identifying fields.
-5. THE CivicQuest_System SHALL seed at least one default reward for every one of the five classes.
-6. THE CivicQuest_System SHALL seed exactly two partners — Greater Community Food Bank (supervisor Dana K.) and Riverside Park Friends — each linked to Maple Street School, and SHALL seed exactly two opportunities per partner with start times between the seed date and 14 days after the seed date.
+3. WHEN the seed script runs, THE CivicQuest_System SHALL create exactly one school named Maple Street School and exactly five classes: Grade 3 (Ms. Rivera, 24 students, on Safe Streets day 1), Grade 7 (Mr. Chen, 22 students, on Respect Everywhere day 2), Grade 11 Advisory (Ms. Okafor, 20 students, on Civics Project day 3), plus a Grade 4 class and a Grade 10 class.
+4. WHEN the seed script creates Grade 11 Advisory students, THE CivicQuest_System SHALL give a Leader login to only the demo Leader Jordan M. and SHALL create no login for any other Grade 11 Advisory student.
+5. THE CivicQuest_System SHALL store for each seeded student only the first name, a single-character last initial, grade, class, and avatar, and no other personally identifying fields.
+6. THE CivicQuest_System SHALL seed at least one default reward for every one of the five classes.
+7. THE CivicQuest_System SHALL seed exactly two partners — Greater Community Food Bank (supervisor Dana K.) and Riverside Park Friends — each linked to Maple Street School, and SHALL seed exactly two opportunities per partner with start times between the seed date and 14 days after the seed date.
 
 ### Requirement 17: Step 3 — Modules, Missions, and Demo Accounts
 
@@ -296,8 +297,8 @@ This application stores data about children. Every security and privacy requirem
 #### Acceptance Criteria
 
 1. THE CivicQuest_System SHALL provide a `/teacher` Today view that lists each class owned by the signed-in teacher.
-2. WHEN displaying a class on the Today view, THE CivicQuest_System SHALL show the mission scheduled for the current date in the teacher's local time zone with its module, day, quality, estimated minutes, and proof type, a mini town preview, and a large "Start mission" button.
-3. WHEN a class's mission has been confirmed for the current date, THE CivicQuest_System SHALL show "Done today" for that class and disable its "Start mission" control.
+2. WHEN displaying a class on the Today view, THE CivicQuest_System SHALL show that class's next not-yet-confirmed mission in its assigned module — determined by the lowest `day_number` whose completion is not yet confirmed, independent of the calendar date — with its module, day, quality, estimated minutes, and proof type, a mini town preview, and a large "Start mission" button.
+3. WHEN a class's current mission has been confirmed, THE CivicQuest_System SHALL show "Done today" for that class and disable its "Start mission" control.
 4. WHEN the signed-in teacher owns no classes, THE CivicQuest_System SHALL show an empty-state message on the Today view.
 5. IF a user who is not the owning teacher requests the Today view's class data, THEN THE CivicQuest_System SHALL deny access and disclose no class data.
 
@@ -321,14 +322,14 @@ This application stores data about children. Every security and privacy requirem
 
 #### Acceptance Criteria
 
-1. WHEN the teacher taps "Confirm for class", THE CivicQuest_System SHALL, through a single server action, save completions for the students checked at the moment of activation, award points and stamps only to those checked students, add the town building, and write an `audit_log` entry.
+1. WHEN the teacher taps "Confirm for class", THE CivicQuest_System SHALL invoke a Postgres function via `.rpc()` declared `security invoker` that, within a single transaction, saves completions for the students checked at the moment of activation, awards points and stamps only to those checked students, adds the town building, and writes an `audit_log` entry, such that all of these changes commit together or roll back together.
 2. THE CivicQuest_System SHALL ignore any client-supplied values for `points_awarded`, `status`, `confirmed_by`, `school_id`, or `level` and compute each value on the server.
 3. WHEN a confirmation succeeds, THE CivicQuest_System SHALL trigger a balloon celebration with one balloon per checked student up to a maximum of 28 balloons, followed by the building dropping into the town.
 4. WHILE the device has `prefers-reduced-motion` set, THE CivicQuest_System SHALL show a static celebration message instead of the balloon animation.
 5. WHEN a confirmation succeeds, THE CivicQuest_System SHALL show the saved mission record, including who confirmed it and who was absent.
 6. IF the confirmation server action fails, THEN THE CivicQuest_System SHALL leave stored points, stamps, completions, and the town unchanged and show an error message.
 7. IF a non-teacher or a teacher who does not own the class attempts to confirm, THEN THE CivicQuest_System SHALL reject the action with no side effects.
-8. IF the mission is already confirmed for the current date, THEN THE CivicQuest_System SHALL not create duplicate completions or award points or stamps again.
+8. IF the mission is already confirmed, THEN THE CivicQuest_System SHALL not create duplicate completions or award points or stamps again.
 
 ### Requirement 21: Step 4 — Edit Who Took Part and Undo
 
@@ -337,14 +338,15 @@ This application stores data about children. Every security and privacy requirem
 #### Acceptance Criteria
 
 1. WHILE fewer than 24 hours have passed since a mission was confirmed, THE CivicQuest_System SHALL show "Edit who took part" and "Undo" controls for that class's mission on the Today view.
-2. WHEN the teacher saves an edited roster, THE CivicQuest_System SHALL add completions for newly checked students and mark removed students' completions `reversed`.
-3. WHEN an edited roster is saved, THE CivicQuest_System SHALL recalculate affected students' points and stamps and write an `audit_log` entry for each change.
-4. IF saving an edited roster fails, THEN THE CivicQuest_System SHALL make no partial changes and retain the pre-edit state.
-5. WHEN the teacher chooses Undo, THE CivicQuest_System SHALL require exactly one reason of "pressed by mistake", "the activity didn't happen", or "wrong class".
-6. IF Undo is confirmed without one of the three permitted reasons, THEN THE CivicQuest_System SHALL reject the Undo and make no changes.
-7. WHEN an Undo is confirmed with a valid reason, THE CivicQuest_System SHALL mark all of that mission's completions for the class `reversed`, remove the points, stamps, and town building, return the mission to "not done", and write an `audit_log` entry with the reason.
-8. WHILE 24 hours or more have passed since confirmation, THE CivicQuest_System SHALL hide the teacher Undo control and allow reversal only by a school admin from the proof log.
-9. THE CivicQuest_System SHALL show a "Today's proof log" panel on the Today view listing confirmations, edits, and undos in reverse chronological order, each with a timestamp.
+2. THE CivicQuest_System SHALL perform the edit-who-took-part and undo operations through Postgres functions called via `.rpc()` and declared `security invoker`, so that row level security still applies and each operation's data changes and its `audit_log` entries commit together or roll back together.
+3. WHEN the teacher saves an edited roster, THE CivicQuest_System SHALL add completions for newly checked students and mark removed students' completions `reversed`.
+4. WHEN an edited roster is saved, THE CivicQuest_System SHALL recalculate affected students' points and stamps and write an `audit_log` entry for each change.
+5. IF saving an edited roster fails, THEN THE CivicQuest_System SHALL make no partial changes and retain the pre-edit state.
+6. WHEN the teacher chooses Undo, THE CivicQuest_System SHALL require exactly one reason of "pressed by mistake", "the activity didn't happen", or "wrong class".
+7. IF Undo is confirmed without one of the three permitted reasons, THEN THE CivicQuest_System SHALL reject the Undo and make no changes.
+8. WHEN an Undo is confirmed with a valid reason, THE CivicQuest_System SHALL mark all of that mission's completions for the class `reversed`, remove the points, stamps, and town building, return the mission to "not done", and write an `audit_log` entry with the reason.
+9. WHILE 24 hours or more have passed since confirmation, THE CivicQuest_System SHALL hide the teacher Undo control and allow reversal only by a school admin from the proof log.
+10. THE CivicQuest_System SHALL show a "Today's proof log" panel on the Today view listing confirmations, edits, and undos in reverse chronological order, each with a timestamp.
 
 ### Requirement 22: Step 4 — Class Town, Projector View, and Rewards Display
 
@@ -355,9 +357,8 @@ This application stores data about children. Every security and privacy requirem
 1. THE CivicQuest_System SHALL provide a `/teacher/class/[id]` view with the roster, class town, rank, module progress, and the 10 most recent mission records in reverse chronological order.
 2. WHEN displaying the class town, THE CivicQuest_System SHALL show one building per distinct approved mission on a 6×6 grid, the current town stage, and progress toward the next stage.
 3. WHEN a class has zero approved missions, THE CivicQuest_System SHALL show an empty town.
-4. WHEN a class has more than 36 distinct approved missions, THE CivicQuest_System SHALL show the 36 most recent on the 6×6 grid until the grid expands at the city stage.
-5. THE CivicQuest_System SHALL provide a `/teacher/class/[id]/town` full-screen projector view showing the town, the current stage, and the next reward.
-6. THE CivicQuest_System SHALL display the class's village, town, and city rewards with their stages.
+4. THE CivicQuest_System SHALL provide a `/teacher/class/[id]/town` full-screen projector view showing the town, the current stage, and the next reward.
+5. THE CivicQuest_System SHALL display the class's village, town, and city rewards with their stages.
 
 ### Requirement 23: Step 4 — Class Leaderboard
 
@@ -380,7 +381,7 @@ This application stores data about children. Every security and privacy requirem
 1. THE CivicQuest_System SHALL provide a `/teacher/roadmap` page for the teacher's level that contains no controls that mutate data.
 2. THE CivicQuest_System SHALL draw each module as a transit line and each day as a station.
 3. WHEN a day station is selected, THE CivicQuest_System SHALL show that day's story, discussion question, instructions, proof type, stamp quality, and town building.
-4. THE CivicQuest_System SHALL mark the mission scheduled for the current date as the current station.
+4. THE CivicQuest_System SHALL mark the class's next not-yet-confirmed mission — the lowest `day_number` whose completion is not yet confirmed, independent of the calendar date — as the current station.
 5. WHEN the teacher's level has no modules, THE CivicQuest_System SHALL show an empty-state message.
 6. IF a user who is not a teacher requests `/teacher/roadmap`, THEN THE CivicQuest_System SHALL deny access.
 
@@ -408,7 +409,7 @@ This application stores data about children. Every security and privacy requirem
 4. IF a Leader is not signed in, not linked to the partner's school, below the opportunity's `min_grade`, over `capacity`, or outside the window from 30 minutes before `starts_at` to `ends_at`, THEN THE CivicQuest_System SHALL reject the check-in.
 5. WHEN a check-in or check-out is created, THE CivicQuest_System SHALL set its status to `pending` on the server and ignore any client-supplied `hours`, `status`, or `approved_by` value.
 6. THE CivicQuest_System SHALL keep check-in hours pending until a partner approves them.
-7. THE CivicQuest_System SHALL rate-limit QR lookups to 10 per minute per teacher device.
+7. THE CivicQuest_System SHALL rate-limit Leader check-in scans to 10 per minute per Leader.
 
 ### Requirement 27: Step 6 — Partner Hour Approval
 
@@ -416,7 +417,7 @@ This application stores data about children. Every security and privacy requirem
 
 #### Acceptance Criteria
 
-1. WHEN a partner approves a pending check-in, THE CivicQuest_System SHALL set its status to `approved`, record `approved_by` and `approved_at` on the server, and write an `audit_log` entry.
+1. WHEN a partner approves a pending check-in, THE CivicQuest_System SHALL invoke a Postgres function via `.rpc()` declared `security invoker` that, within a single transaction, sets the check-in status to `approved`, records `approved_by` and `approved_at` on the server, and writes an `audit_log` entry, such that these changes commit together or roll back together.
 2. IF a partner attempts to approve a check-in that does not belong to the partner's own organization, THEN THE CivicQuest_System SHALL reject the approval.
 3. IF a user attempts to approve the user's own work, THEN THE CivicQuest_System SHALL reject the approval.
 4. IF an approval targets a check-in that is not in the `pending` status, THEN THE CivicQuest_System SHALL reject the approval.
@@ -439,7 +440,7 @@ This application stores data about children. Every security and privacy requirem
 #### Acceptance Criteria
 
 1. THE CivicQuest_System SHALL serve a `/` landing page without requiring authentication that describes the product concept, states the Massachusetts civics project requirement, names the three levels (Learners, Helpers, Leaders), and states that Google Classroom and Clever integration are coming next.
-2. WHILE Demo_Mode is enabled, THE CivicQuest_System SHALL show on the `/` landing page one "Try the demo" control for each seeded demo role (admin, teacher3, teacher7, teacher11, counselor, partner, and leader).
+2. WHILE Demo_Mode is enabled, THE CivicQuest_System SHALL show on the `/` landing page one "Try the demo" control for each seeded demo role except counselor (admin, teacher3, teacher7, teacher11, partner, and leader).
 3. WHEN a visitor selects a "Try the demo" control for a demo role, THE CivicQuest_System SHALL sign the visitor in as that role's demo account and redirect the visitor to that role's home page.
 4. WHILE Demo_Mode is not enabled, THE CivicQuest_System SHALL hide every "Try the demo" control on the `/` landing page.
 5. THE CivicQuest_System SHALL render all `/` landing page content through React without `dangerouslySetInnerHTML` and SHALL allow only `http` and `https` links.
@@ -525,7 +526,7 @@ This application stores data about children. Every security and privacy requirem
 1. IF an action fails, THEN THE CivicQuest_System SHALL show the user a message that names the failed action and the corrective step, and SHALL NOT show a stack trace or SQL error.
 2. THE CivicQuest_System SHALL never log passwords, tokens, keys, or student names.
 3. WHEN a confirmation, approval, reversal, invite, or demo reset occurs, THE CivicQuest_System SHALL write a corresponding `audit_log` entry.
-4. IF writing an `audit_log` entry for a confirmation, approval, or reversal fails, THEN THE CivicQuest_System SHALL roll back the associated change so that no unlogged state change persists.
+4. WHERE a confirmation, edit, undo, or hour approval is performed, THE CivicQuest_System SHALL execute the data change and its `audit_log` entry within a single `security invoker` Postgres function transaction so that no unlogged state change can persist.
 
 ### Requirement 37: Cross-Cutting — Child Privacy and Content
 

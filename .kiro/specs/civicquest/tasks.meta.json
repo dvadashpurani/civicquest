@@ -1,0 +1,192 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Scaffold the Next.js project with pinned dependencies": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792865131126
+      },
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792865859567
+      }
+    ],
+    "1.2 Add environment validation": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792865863555
+      },
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792866198762
+      }
+    ],
+    "1.4 Write and apply the schema migration": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792865864266
+      },
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792866199661
+      }
+    ],
+    "1.13 Add design tokens, fonts, and skins": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792865864640
+      },
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792866200155
+      }
+    ],
+    "1.3 Create the three Supabase clients": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792866204702
+      },
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792866644514
+      }
+    ],
+    "1.5 Add RLS helper functions and RLS policies": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792866205566
+      },
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792866644964
+      }
+    ],
+    "1.10 Set security headers and CSP": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792866206400
+      },
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792866645711
+      }
+    ],
+    "1.14 Self-host Fluent Emoji 3D icons and build the Icon component": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792866207106
+      },
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792866646281
+      }
+    ],
+    "1.6 Add opportunity column privileges, token functions, partner surface, and private helpers": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792866649711
+      },
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792867065655
+      }
+    ],
+    "1.11 Add middleware and server auth helpers": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792866650402
+      },
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792867066261
+      }
+    ],
+    "1.8 Add the storage bucket and policies": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792867084165
+      },
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792867927792
+      }
+    ],
+    "1.7 Add protection triggers": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792867084246
+      },
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792867927272
+      }
+    ],
+    "1.12 Build the `/login` page and disable public sign-up": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792867084335
+      },
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792867928432
+      }
+    ],
+    "1.9 Write the Step 1 SQL security test script": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792867932557
+      },
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792868492748
+      }
+    ],
+    "1.16 Start `SECURITY_TESTS.md`": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792867933252
+      },
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792868493511
+      }
+    ],
+    "1. Step 1 — Setup, database, and security foundation": [
+      {
+        "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
+        "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
+        "timestamp": 1792868501027
+      }
+    ]
+  }
+}

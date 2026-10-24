@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Database security guard",
+      "trigger": "PostFileSave",
+      "action": {
+        "type": "agent",
+        "prompt": "Check this migration: every new table has row level security enabled and at least one policy, every security definer function sets search_path = '', no function builds SQL from strings, and audit_log has no update or delete policy. Report anything missing briefly. Don't change other files."
+      },
+      "description": "Checks every migration for row level security and safe functions",
+      "matcher": "supabase[\\\\/]migrations[\\\\/].*\\.sql$",
+      "enabled": true
+    }
+  ]
+}

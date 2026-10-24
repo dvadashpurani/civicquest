@@ -1,0 +1,17 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Property tests",
+      "trigger": "PostFileSave",
+      "action": {
+        "type": "command",
+        "command": "npm run test"
+      },
+      "description": "Runs the fast-check tests when business rules change.",
+      "matcher": "(lib[\\\\/]domain|tests)[\\\\/].*\\.ts$",
+      "timeout": 120,
+      "enabled": true
+    }
+  ]
+}

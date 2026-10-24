@@ -1,0 +1,17 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Type check and lint",
+      "trigger": "PostFileSave",
+      "action": {
+        "type": "command",
+        "command": "npm run check"
+      },
+      "description": "Runs the type checker and linter whenever app code is saved.",
+      "matcher": "(app|components|lib)[\\\\/].*\\.tsx?$",
+      "timeout": 120,
+      "enabled": true
+    }
+  ]
+}

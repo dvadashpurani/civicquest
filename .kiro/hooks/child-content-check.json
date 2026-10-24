@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Child content check",
+      "trigger": "PostFileSave",
+      "action": {
+        "type": "agent",
+        "prompt": "Check that every story uses only original characters with no copyrighted or trademarked characters or brands, that grade 2-5 stories show near misses and feelings rather than injuries, that civics content is non-partisan, and that no story names a real person. List anything that breaks these rules briefly."
+      },
+      "description": "Checks mission stories for copyright, age, and non-partisan rules.",
+      "matcher": "(docs[\\\\/]missions\\.md|scripts[\\\\/]seed\\.ts)$",
+      "enabled": true
+    }
+  ]
+}

@@ -188,35 +188,35 @@ Build CivicQuest in TypeScript (Next.js App Router, strict mode) on Supabase, in
     - **Property 10: Confirm upsert is idempotent**
     - **Validates: Requirements 20.8, 9.5, 15.1**
 
-  - [ ] 3.19 Write example unit tests for domain boundaries
+  - [x] 3.19 Write example unit tests for domain boundaries
     - `tests/domain/examples.test.ts`: grades 5/6/8/9, counts 9/10/24/25/35/36, 8h+ caps, `//evil.com`, `/\evil`, `javascript:` paths
     - _Requirements: 8.2, 8.3, 8.4, 10.2, 12.2, 12.5, 14.3_
 
-- [~] 4. Step 2 checkpoint
+- [x] 4. Step 2 checkpoint
   - Run lint, typecheck, and tests, and fix any failures.
   - Ask the user to test the step and commit.
   - Add two or three sentences to the "Build log" section of `docs/KIRO_WRITEUP.md` describing what was built and which Kiro features helped (specs, steering, hooks, MCP, property-based tests).
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 5. Step 3 — Seed data and demo content
-  - [~] 5.1 Parse `docs/missions.md` into typed content
+- [x] 5. Step 3 — Seed data and demo content
+  - [x] 5.1 Parse `docs/missions.md` into typed content
     - `lib/seed/missions.ts`: parse 10 modules and 50 missions (story, discussion question, instructions, proof, points, minutes, town building); map "Teacher watched" → `class_activity`, "Short quiz" → `quiz`, "Photo" → `photo_review`, "QR check-in" → `qr_checkin`; throw naming any unmapped phrase or any missing field
     - _Requirements: 17.1, 17.2, 17.3_
 
-  - [ ]* 5.2 Write unit tests for the missions parser
+  - [x]* 5.2 Write unit tests for the missions parser
     - Exactly 10 modules and 50 missions, no empty fields, unknown phrase halts with its name
     - _Requirements: 17.1, 17.2, 17.3_
 
-  - [~] 5.3 Write the core seed script
+  - [x] 5.3 Write the core seed script
     - `scripts/seed.ts` calling `lib/seed/run.ts` (reusable by demo reset) with the admin client; exit non-zero with "SUPABASE_SERVICE_ROLE_KEY is required" and seed nothing if absent
     - Seed Maple Street School; Grade 3 (Ms. Rivera, 24, Safe Streets), Grade 7 (Mr. Chen, 22, Respect Everywhere), Grade 11 Advisory (Ms. Okafor, 20, Civics Project), a Grade 4 and a Grade 10 class; students with only first name, last initial, grade, class, avatar; default rewards per class; modules and missions; Greater Community Food Bank (supervisor Dana K.) and Riverside Park Friends, each school-linked with two opportunities starting within 14 days
     - _Requirements: 16.1, 16.2, 16.3, 16.5, 16.6, 16.7, 17.1, 37.1_
 
-  - [~] 5.4 Seed the demo accounts
+  - [x] 5.4 Seed the demo accounts
     - `lib/seed/accounts.ts`, wired into `lib/seed/run.ts`: only when `DEMO_MODE` is exactly `true`, create exactly seven accounts (admin, teacher3, teacher7, teacher11, counselor, partner, leader) with password `demo1234` and matching `profiles`; link leader to Jordan M. (grade 11); no other student gets a login
     - _Requirements: 16.4, 17.4, 17.6, 37.3_
 
-  - [~] 5.5 Seed two weeks of history
+  - [x] 5.5 Seed two weeks of history
     - `lib/seed/history.ts` (pure plan) wired into `lib/seed/run.ts`: approved completions over the 14 days before the seed date using `computePoints`, so the Grade 3 town is 45–55% full, every student has ≥ 1 stamp, and `audit_log` has confirmation entries dated before today; class positions match Safe Streets day 1 / Respect Everywhere day 2 / Civics Project day 3
     - _Requirements: 17.5_
 

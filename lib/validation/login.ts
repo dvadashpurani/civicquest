@@ -35,14 +35,17 @@ export type LoginInput = z.infer<typeof loginSchema>;
  * Turns submitted form data into a plain object for `loginSchema`. React adds
  * `$ACTION_*` bookkeeping fields to server action submissions; those are
  * dropped, and every other field is kept so the strict schema rejects unknown
- * ones. A field sent twice becomes an array, which the schema also rejects.
+ * ones. The hidden `next` redirect field the login form carries is also
+ * dropped: the action handles it separately through safeRedirectPath, so the
+ * strict schema must not see it. A field sent twice becomes an array, which
+ * the schema also rejects.
  */
 export function loginFormToObject(formData: FormData): Record<string, unknown> {
   // A Map plus Object.fromEntries defines own properties, so a field named
   // `__proto__` stays an ordinary (rejected) key instead of a prototype.
   const fields = new Map<string, FormDataEntryValue[]>();
   for (const [key, value] of formData.entries()) {
-    if (key.startsWith("$ACTION")) continue;
+    if (key.startsWith("$ACTION") || key === "next") continue;
     fields.set(key, [...(fields.get(key) ?? []), value]);
   }
   return Object.fromEntries(

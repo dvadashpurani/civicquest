@@ -53,6 +53,16 @@ describe("parseLoginForm", () => {
     expect(parseLoginForm(data)).toEqual({ email: "a@example.org", password: "secret" });
   });
 
+  it("drops the hidden next redirect field so credentials still parse", () => {
+    const data = form([
+      ["email", "a@example.org"],
+      ["password", "secret"],
+      ["next", "/teacher"],
+    ]);
+    expect(loginFormToObject(data)).not.toHaveProperty("next");
+    expect(parseLoginForm(data)).toEqual({ email: "a@example.org", password: "secret" });
+  });
+
   it("rejects a repeated field and a __proto__ field", () => {
     expect(
       parseLoginForm(form([["email", "a@example.org"], ["email", "b@example.org"], ["password", "x"]])),
@@ -67,7 +77,7 @@ describe("parseLoginForm", () => {
     fc.assert(
       fc.property(
         fc.string({ minLength: 1, maxLength: 20 }).filter(
-          (k) => k !== "email" && k !== "password" && !k.startsWith("$ACTION"),
+          (k) => k !== "email" && k !== "password" && k !== "next" && !k.startsWith("$ACTION"),
         ),
         fc.string({ maxLength: 20 }),
         (key, value) => {

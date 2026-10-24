@@ -540,6 +540,11 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869461307
+      },
+      {
+        "executionId": "d7ab353f-4d35-46e7-bec1-913ab32d3e10",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870680990
       }
     ],
     "5.1 Parse `docs/missions.md` into typed content": [
@@ -547,6 +552,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869461430
+      },
+      {
+        "executionId": "d7ab353f-4d35-46e7-bec1-913ab32d3e10",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870705792
+      },
+      {
+        "executionId": "d7ab353f-4d35-46e7-bec1-913ab32d3e10",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870944084
       }
     ],
     "5.3 Write the core seed script": [
@@ -554,6 +569,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869461564
+      },
+      {
+        "executionId": "d7ab353f-4d35-46e7-bec1-913ab32d3e10",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870947236
+      },
+      {
+        "executionId": "d7ab353f-4d35-46e7-bec1-913ab32d3e10",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792871219194
       }
     ],
     "5.4 Seed the demo accounts": [
@@ -561,6 +586,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869461683
+      },
+      {
+        "executionId": "d7ab353f-4d35-46e7-bec1-913ab32d3e10",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792871237275
+      },
+      {
+        "executionId": "d7ab353f-4d35-46e7-bec1-913ab32d3e10",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792871415145
       }
     ],
     "5.5 Seed two weeks of history": [
@@ -568,6 +603,16 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869461768
+      },
+      {
+        "executionId": "d7ab353f-4d35-46e7-bec1-913ab32d3e10",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792871417777
+      },
+      {
+        "executionId": "d7ab353f-4d35-46e7-bec1-913ab32d3e10",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792871740590
       }
     ],
     "6. Step 3 checkpoint": [
@@ -841,6 +886,27 @@
         "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
         "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
         "timestamp": 1792869464665
+      }
+    ],
+    "3.19 Write example unit tests for domain boundaries": [
+      {
+        "executionId": "d7ab353f-4d35-46e7-bec1-913ab32d3e10",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870701804
+      }
+    ],
+    "5.2 Write unit tests for the missions parser": [
+      {
+        "executionId": "d7ab353f-4d35-46e7-bec1-913ab32d3e10",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792871231851
+      }
+    ],
+    "5. Step 3 — Seed data and demo content": [
+      {
+        "executionId": "d7ab353f-4d35-46e7-bec1-913ab32d3e10",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792871740690
       }
     ]
   }

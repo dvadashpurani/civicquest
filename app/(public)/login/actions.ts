@@ -15,6 +15,7 @@ import { redirect } from "next/navigation";
 import { consumeLoginRateLimit } from "@/lib/auth/login-rate-limit-store";
 import { clientIpFromHeaders } from "@/lib/auth/login-rate-limit";
 import { parseRole, roleHome } from "@/lib/auth/roles";
+import { safeRedirectPath } from "@/lib/domain/redirect";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { EMAIL_MAX_LENGTH, parseLoginForm } from "@/lib/validation/login";
 
@@ -79,7 +80,12 @@ export async function signIn(prev: LoginState, formData: FormData): Promise<Logi
     return failed(prev, SIGN_IN_FAILED, typedEmail);
   }
 
-  // TODO(task 3.15): honor `?next=` through safeRedirectPath. Until then the
-  // role home is the only destination (Requirements 6.7, 6.12, 6.13).
-  redirect(home);
+  // Honor the `?next=` target the proxy attached when it turned a signed-out
+  // user away, but only through safeRedirectPath: anything that is not a plain
+  // relative single-slash path (external origins, `//evil`, schemes, control
+  // characters) collapses to `/`, and we then fall back to the role home.
+  // This is the single redirect gate for Requirements 6.7, 6.12, and 6.13.
+  const rawNext = formData.get("next");
+  const next = typeof rawNext === "string" ? safeRedirectPath(rawNext) : "/";
+  redirect(next === "/" ? home : next);
 }

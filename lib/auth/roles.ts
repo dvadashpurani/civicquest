@@ -2,6 +2,8 @@
 // `lib/auth/require.ts`. No I/O and no `server-only`, so the proxy can import
 // it and Vitest can test it directly (Requirements 6.9, 6.10, 31.5).
 
+import { safeRedirectPath } from "@/lib/domain/redirect";
+
 /** Mirrors the `public.user_role` enum in supabase/migrations/0001_schema.sql. */
 export const USER_ROLES = ["admin", "teacher", "counselor", "partner", "student"] as const;
 
@@ -99,9 +101,16 @@ export function decideRoute({ pathname, signedIn, role }: RouteInput): RouteDeci
   if (required === null) return { action: "allow" };
 
   if (!signedIn) {
-    // TODO(task 3.15): the login page passes `next` through safeRedirectPath.
-    const next = encodeURIComponent(pathname);
-    return { action: "redirect", location: `${LOGIN_PATH}?next=${next}`, reason: "signed-out" };
+    // Only attach `next` when the original path is a safe relative target.
+    // safeRedirectPath collapses anything else to `/`, which the login action
+    // treats as "no target" and replaces with the role home (6.12, 6.13), so
+    // a crafted request URL can never steer the post-login redirect.
+    const safeNext = safeRedirectPath(pathname);
+    const location =
+      safeNext === "/"
+        ? LOGIN_PATH
+        : `${LOGIN_PATH}?next=${encodeURIComponent(safeNext)}`;
+    return { action: "redirect", location, reason: "signed-out" };
   }
   if (role === null) {
     return { action: "redirect", location: LOGIN_PATH, reason: "no-role" };

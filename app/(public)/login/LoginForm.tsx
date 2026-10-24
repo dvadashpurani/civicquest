@@ -9,7 +9,7 @@ import { signIn, type LoginState } from "./actions";
 const initialState: LoginState = { error: null, email: "", attempt: 0 };
 const ERROR_ID = "login-error";
 
-export function LoginForm() {
+export function LoginForm({ next }: { next: string }) {
   const [state, formAction, pending] = useActionState(signIn, initialState);
   const describedBy = state.error ? ERROR_ID : undefined;
 
@@ -18,6 +18,11 @@ export function LoginForm() {
     // generic message as wrong credentials (Requirement 6.8). `required`
     // stays for assistive technology.
     <form action={formAction} className="flex flex-col gap-5" noValidate>
+      {/* The post-login target the proxy attached, already run through
+          safeRedirectPath on the server. The action re-validates it, so a
+          tampered value only ever falls back to the role home (6.12, 6.13). */}
+      <input type="hidden" name="next" value={next} />
+
       {/* Always mounted so screen readers pick up each new message. The key
           remounts the text so a repeated message is announced again. */}
       <div id={ERROR_ID} role="alert" aria-live="assertive" aria-atomic="true">

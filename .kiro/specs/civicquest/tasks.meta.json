@@ -1,5 +1,22 @@
 {
-  "pbtResults": {},
+  "pbtResults": {
+    "3.7 Write property test for `computeHours`": {
+      "status": "passed",
+      "lastRunTimestamp": 1792870143098
+    },
+    "3.5 Write property test for `computeStamps`": {
+      "status": "passed",
+      "lastRunTimestamp": 1792870144803
+    },
+    "3.9 Write property test for `placeTown`": {
+      "status": "passed",
+      "lastRunTimestamp": 1792870190924
+    },
+    "3.12 Write property test for `sanitizeCsvCell`": {
+      "status": "passed",
+      "lastRunTimestamp": 1792870267475
+    }
+  },
   "executionHistory": {
     "1.1 Scaffold the Next.js project with pinned dependencies": [
       {
@@ -186,6 +203,644 @@
         "executionId": "6d9d60f3-9485-4be6-bee7-f506c1330952",
         "chatSessionId": "sess_5d04f42e-0f44-45d4-839d-f2610efdabf2",
         "timestamp": 1792868501027
+      }
+    ],
+    "1.15 Write unit tests for env validation and the Icon fallback": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869458922
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869724849
+      }
+    ],
+    "2. Step 1 checkpoint": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869458981
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869725717
+      }
+    ],
+    "3.1 Define domain types and implement `gradeToLevel`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869459042
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869731110
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869871292
+      }
+    ],
+    "3.2 Write property test for `gradeToLevel`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869459101
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869875544
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869986058
+      }
+    ],
+    "3.3 Implement `computePoints` and `computeStamps`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869459159
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869876482
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869987016
+      }
+    ],
+    "3.4 Write property test for `computePoints`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869459249
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870067250
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870206122
+      }
+    ],
+    "3.5 Write property test for `computeStamps`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869459405
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870068206
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870205381
+      }
+    ],
+    "3.6 Implement `computeHours`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869459506
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869877418
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869987951
+      }
+    ],
+    "3.7 Write property test for `computeHours`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869459609
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870069611
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870202071
+      }
+    ],
+    "3.8 Implement `townStage` and `placeTown`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869459683
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869878372
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869988858
+      }
+    ],
+    "3.9 Write property test for `placeTown`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869459751
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870070551
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870204435
+      }
+    ],
+    "3.10 Write property test for `townStage`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869459815
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870071245
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870203480
+      }
+    ],
+    "3.11 Implement `sanitizeCsvCell`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869459881
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869879358
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869989865
+      }
+    ],
+    "3.12 Write property test for `sanitizeCsvCell`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869460104
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870215766
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870369936
+      }
+    ],
+    "3.13 Implement `safeRedirectPath`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869460409
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869996544
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870063861
+      }
+    ],
+    "3.14 Write property test for `safeRedirectPath`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869460548
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870215056
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870368486
+      }
+    ],
+    "3.15 Wire `safeRedirectPath` into login and middleware": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869460750
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870214052
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870370830
+      }
+    ],
+    "3.16 Implement confirm/undo/edit equivalence helpers": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869460916
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870212671
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870371609
+      }
+    ],
+    "3.17 Write property test for confirm/undo/edit equivalence": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869461064
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870377671
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870480027
+      }
+    ],
+    "3.18 Write property test for idempotent confirm": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869461189
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870378493
+      },
+      {
+        "executionId": "37832a1b-04e6-4de1-b595-7c39c967c0f7",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792870479414
+      }
+    ],
+    "4. Step 2 checkpoint": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869461307
+      }
+    ],
+    "5.1 Parse `docs/missions.md` into typed content": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869461430
+      }
+    ],
+    "5.3 Write the core seed script": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869461564
+      }
+    ],
+    "5.4 Seed the demo accounts": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869461683
+      }
+    ],
+    "5.5 Seed two weeks of history": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869461768
+      }
+    ],
+    "6. Step 3 checkpoint": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869462007
+      }
+    ],
+    "7.1 Write the `confirm_class_mission` RPC": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869462134
+      }
+    ],
+    "7.2 Write the `edit_mission_participants` RPC": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869462218
+      }
+    ],
+    "7.3 Write the `undo_mission` RPC": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869462280
+      }
+    ],
+    "7.4 Write the Step 4 SQL test script": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869462342
+      }
+    ],
+    "7.5 Add validation schemas and teacher data loaders": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869462410
+      }
+    ],
+    "7.6 Add teacher server actions": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869462466
+      }
+    ],
+    "7.7 Build the class town components": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869462529
+      }
+    ],
+    "7.8 Implement the leaderboard": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869462592
+      }
+    ],
+    "7.10 Build the Today view and proof log panel": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869462654
+      }
+    ],
+    "7.11 Build the three-step mission run screen": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869462714
+      }
+    ],
+    "7.12 Draw the Pip Safe Streets day 1 comic": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869462778
+      }
+    ],
+    "7.13 Add Confirm for class, celebration, and saved record": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869462838
+      }
+    ],
+    "7.14 Add Edit who took part and Undo UI": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869462896
+      }
+    ],
+    "7.15 Build the class view": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869462954
+      }
+    ],
+    "7.16 Build the full-screen projector town": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869463014
+      }
+    ],
+    "7.17 Update `SECURITY_TESTS.md` for the core loop": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869463186
+      }
+    ],
+    "8. Step 4 checkpoint": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869463291
+      }
+    ],
+    "9.1 Build `/teacher/roadmap`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869463360
+      }
+    ],
+    "10. Step 5 checkpoint": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869463430
+      }
+    ],
+    "11.1 Write the `approve_checkin` RPC": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869463505
+      }
+    ],
+    "11.2 Write the `leader_scan` RPC": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869463578
+      }
+    ],
+    "11.3 Write the Step 6 SQL test script": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869463642
+      }
+    ],
+    "11.4 Build the partner opportunities list": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869463706
+      }
+    ],
+    "11.5 Build `/partner/opportunity/[id]`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869463774
+      }
+    ],
+    "11.6 Build `/me/scan`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869463832
+      }
+    ],
+    "11.7 Build the Leader `/me` page": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869463895
+      }
+    ],
+    "11.8 Build `/me/certificate`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869463967
+      }
+    ],
+    "11.9 Update `SECURITY_TESTS.md` for the Leaders flow": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869464026
+      }
+    ],
+    "12. Step 6 checkpoint": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869464086
+      }
+    ],
+    "13.1 Build the landing page with demo logins": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869464143
+      }
+    ],
+    "13.2 Add Reset demo data": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869464202
+      }
+    ],
+    "13.3 Build the admin overview": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869464262
+      }
+    ],
+    "13.4 Build `/admin/proof-log` with admin reversal": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869464326
+      }
+    ],
+    "13.5 Write the Step 7 SQL test script": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869464388
+      }
+    ],
+    "13.6 Write the README": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869464450
+      }
+    ],
+    "13.7 Finish `SECURITY_TESTS.md`": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869464515
+      }
+    ],
+    "14. Step 7 checkpoint": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869464598
+      }
+    ],
+    "18. Final checkpoint (after any stretch work)": [
+      {
+        "executionId": "d5db4bd8-e619-4457-bd83-89595c07a29e",
+        "chatSessionId": "sess_af380a74-6d72-4c8a-97a2-96aad86dffa5",
+        "timestamp": 1792869464665
       }
     ]
   }
